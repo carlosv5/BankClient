@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class ClientApp {
 	//Set true or false debug 
 	static boolean debug = true;
+    
 	public ClientApp() {
 		// TODO Auto-generated constructor stub
 	}
@@ -124,6 +125,8 @@ public class ClientApp {
         	System.out.println("Balance: " + quantity);
 
         }
+        BankClient bc = new BankClient(accountId, clientName, quantity); 
+        TCPClient.connection(operation, bc);
 		return true;
 		
 	}
