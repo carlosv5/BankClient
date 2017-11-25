@@ -3,7 +3,8 @@ package es.upm.dit.cnvr;
 import java.util.Scanner;
 
 public class ClientApp {
-
+	//Set true or false debug 
+	static boolean debug = true;
 	public ClientApp() {
 		// TODO Auto-generated constructor stub
 	}
@@ -22,8 +23,6 @@ public class ClientApp {
 	}
 	
 	public static void showOptions(){
-		//Set true or false debug 
-		boolean debug = true;
 		System.out.println("|       These are the operations you can do:         |");
 		System.out.println("|1. Create a client                                  |");
 		System.out.println("|   - Usage: CREATE [ClientName] [Balance]           |");
@@ -96,6 +95,14 @@ public class ClientApp {
 	}
 	
 	public static boolean operateAndSend(OperationEnum operation, int accountId,String clientName, double quantity){
+        if(debug){
+        	System.out.println("Debug operation");
+        	System.out.println("Operation: " + operation);
+        	System.out.println("Account ID: " + accountId);
+        	System.out.println("Client Name: " + clientName);
+        	System.out.println("Balance: " + quantity);
+
+        }
 		return true;
 		
 	}
