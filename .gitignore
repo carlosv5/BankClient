@@ -1,3 +1,4 @@
+#Gitigonre for Java projects (Eclipse)
 # Compiled class file
 *.class
 
@@ -20,3 +21,29 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Linux
+# backup files
+*~
+
+# Windows
+# thumbnails
+Thumbs.db
+
+# Mac OS X
+# metadata
+.DS_Store
+# thumbnails
+._*
+
+# GIT
+.git/
+
+# Eclipse
+.settings/
+.buildpath
+.classpath
+.project
+
+# jME (binaries)
+*.so
