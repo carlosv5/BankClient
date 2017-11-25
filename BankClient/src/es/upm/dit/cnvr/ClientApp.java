@@ -49,6 +49,11 @@ public class ClientApp {
         	Double balance = 0.0;
 		        switch (input_parts[0]) {
 		            case "CREATE":
+		            	//Check options
+		            	if(input_parts[1] == null || input_parts[2] == null || input_parts.length > 3){
+		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+		            		break;
+		            	}
 		            	//Variables for method
 		            	op = OperationEnum.CREATE_CLIENT;
 		            	clientName = input_parts[1];
@@ -56,7 +61,12 @@ public class ClientApp {
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		                break;
-		            case "READ":		            
+		            case "READ":	
+		            	//Check options
+		            	if(input_parts[1] == null || input_parts.length > 2){
+		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+		            		break;
+		            	}
 		            	//Variables for method
 		            	op = OperationEnum.READ_CLIENT;
 		            	accountId = Integer.parseInt(input_parts[1]);
@@ -64,6 +74,11 @@ public class ClientApp {
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		            	break;
 		            case "UPDATE":
+		            	//Check options
+		            	if(input_parts[1] == null || input_parts[2] == null || input_parts.length > 3){
+		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+		            		break;
+		            	}
 		            	//Variables for method
 		            	op = OperationEnum.UPDATE_CLIENT;
 		            	accountId = Integer.parseInt(input_parts[1]);
@@ -72,6 +87,11 @@ public class ClientApp {
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		            	break;
 		            case "DELETE":
+		            	//Check options
+		            	if(input_parts[1] == null || input_parts[2] == null || input_parts.length > 3){
+		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+		            		break;
+		            	}
 		            	//Variables for method
 		            	op = OperationEnum.DELETE_CLIENT;
 		            	accountId = Integer.parseInt(input_parts[1]);
@@ -93,6 +113,7 @@ public class ClientApp {
 		        }
 		}
 	}
+	
 	
 	public static boolean operateAndSend(OperationEnum operation, int accountId,String clientName, double quantity){
         if(debug){
