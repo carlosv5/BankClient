@@ -12,8 +12,8 @@ public class Receiver extends Thread{
     private boolean finished = false;
     private boolean error    = false;
     private int nValue       = 0;
-    private BankClient bc;
-
+    private Transaction transaction;
+    
     public Receiver (Socket clientSocket) {
         this.clientSocket = clientSocket;
     }
@@ -35,7 +35,8 @@ public class Receiver extends Thread{
                 inFromServer =new ObjectInputStream(clientSocket.getInputStream());
                 String message;
                 // 2. Read from the connection
-                bc = (BankClient) inFromServer.readObject();
+                transaction = (Transaction) inFromServer.readObject();
+                BankClient bc = transaction.getBankClient();
                 if (bc == null) break;
                 System.out.println("<< Connection: Account recieved " + bc.getClientName());
                 nReceiver ++;

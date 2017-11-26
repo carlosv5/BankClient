@@ -10,8 +10,10 @@ import es.upm.dit.cnvr.BankClient;
 
 public class TCPClient {
 
-    public static void connection(OperationEnum op, BankClient bc) { //throws Exception{
+    public static void connection(Transaction transaction) { //throws Exception{
 
+    	OperationEnum operation = transaction.getOperation();
+    	BankClient bc = transaction.getBankClient();
         Socket clientSocket;
         ObjectOutputStream outToServer;
         int nTimes      = 4;
@@ -38,13 +40,13 @@ public class TCPClient {
         	if(ClientApp.debug){
             	System.out.println("Debug operation");
                 System.out.println("Transaction: the information fo the account to send is ");
-            	System.out.println("Operation: " + op);
+            	System.out.println("Operation: " + operation);
             	System.out.println("Account ID: " + bc.getAccount());
             	System.out.println("Client Name: " + bc.getClientName());
             	System.out.println("Balance: " + bc.getBalance());        	
             	}
              // 4. Write information to the connection
-              outToServer.writeObject(bc);
+              outToServer.writeObject(transaction);
               outToServer.flush();
 
                 Thread.sleep(random.nextInt(bound) * 1000);

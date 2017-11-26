@@ -126,7 +126,8 @@ public class ClientApp {
 
         }
         BankClient bc = new BankClient(accountId, clientName, quantity); 
-        TCPClient.connection(operation, bc);
+        Transaction transaction = new Transaction(operation,bc);
+        TCPClient.connection(transaction);
 		return true;
 		
 	}

@@ -11,7 +11,7 @@ import es.upm.dit.cnvr.BankClient;
 
 public class ConnectionDispatcher extends Thread {
 
-    private BankClient bc;
+	private Transaction transaction;
     private Socket connection;
     private ObjectInputStream inFromClient;
     private DataOutputStream outToClient;
@@ -37,7 +37,8 @@ public class ConnectionDispatcher extends Thread {
             inFromClient = new ObjectInputStream(connection.getInputStream());
 
             while (true) {
-                bc = (BankClient) inFromClient.readObject();
+                transaction = (Transaction) inFromClient.readObject();
+                BankClient bc = transaction.getBankClient();
                 if (bc == null) break;
 
                 handler = new Handler(id, sequence, bc, connection);
