@@ -1,4 +1,4 @@
-package es.upm.dit.cnvr.client;
+package es.upm.dit.cnvr.server;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package es.upm.dit.cnvr.client;
+package es.upm.dit.cnvr.server;
 
 
 import java.io.BufferedReader;
@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
+import es.upm.dit.cnvr.client.Transaction;
 import es.upm.dit.cnvr.model.BankClient;
 
 public class ConnectionDispatcher extends Thread {

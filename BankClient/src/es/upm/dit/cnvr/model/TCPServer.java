@@ -1,7 +1,9 @@
-package es.upm.dit.cnvr.client;
+package es.upm.dit.cnvr.model;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import es.upm.dit.cnvr.server.ConnectionDispatcher;
 
 
 public class TCPServer {
