@@ -1,11 +1,11 @@
-package es.upm.dit.cnvr.client;
+package es.upm.dit.cnvr;
 
 
 import java.io.*;
 import java.net.*;
 import java.util.Random;
 
-import es.upm.dit.cnvr.client.BankClient;;
+import es.upm.dit.cnvr.BankClient;
 
 
 public class TCPClient {

@@ -1,4 +1,4 @@
-package es.upm.dit.cnvr.client;
+package es.upm.dit.cnvr;
 
 
 import java.io.BufferedReader;

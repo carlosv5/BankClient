@@ -1,4 +1,4 @@
-package es.upm.dit.cnvr.client;
+package es.upm.dit.cnvr;
 
 public enum OperationEnum {
 CREATE_CLIENT,
