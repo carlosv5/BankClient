@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
+import es.upm.dit.cnvr.model.BankClient;
+
 public class Receiver extends Thread{
 
     private Socket clientSocket;

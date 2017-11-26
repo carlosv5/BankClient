@@ -2,7 +2,7 @@ package es.upm.dit.cnvr.client;
 
 import java.util.Random;
 
-import es.upm.dit.cnvr.client.BankClient;
+import es.upm.dit.cnvr.model.BankClient;
 
 import java.io.DataOutputStream;
 import java.io.ObjectOutputStream;

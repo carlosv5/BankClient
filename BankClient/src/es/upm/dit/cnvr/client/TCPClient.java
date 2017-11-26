@@ -5,7 +5,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Random;
 
-import es.upm.dit.cnvr.client.BankClient;
+import es.upm.dit.cnvr.model.BankClient;
 
 
 public class TCPClient {
