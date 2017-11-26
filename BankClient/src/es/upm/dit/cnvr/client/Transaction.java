@@ -1,4 +1,4 @@
-package es.upm.dit.cnvr;
+package es.upm.dit.cnvr.client;
 
 import java.io.Serializable;
 

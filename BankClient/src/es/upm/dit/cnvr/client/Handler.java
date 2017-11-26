@@ -1,11 +1,12 @@
-package es.upm.dit.cnvr;
+package es.upm.dit.cnvr.client;
 
 import java.util.Random;
+
+import es.upm.dit.cnvr.client.BankClient;
+
 import java.io.DataOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
-import es.upm.dit.cnvr.BankClient;
 
 
 public class Handler extends Thread{
