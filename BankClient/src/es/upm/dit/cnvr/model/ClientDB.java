@@ -21,11 +21,11 @@ public class ClientDB implements Serializable {
 	public ServiceStatus createClient(BankClient client) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
 		if (clientDB.containsKey(client.getAccount())) {
-			//it already exists
-			// TODO: Ahora mismo no hace nada, hay que implementar que se meta en el hashtable el cliente.
+			// It already exists: We inform about it
 			stat = ServiceStatus.EXISTING_CLIENT; 
 		}else {
-			//create
+			// It doesn't exists: We create it
+			clientDB.put(client.getAccount(), client);
 			stat = ServiceStatus.OK;
 		}
 		return stat;
@@ -45,7 +45,10 @@ public class ClientDB implements Serializable {
 		}
 		return stat;
 	}
-	
+	/* TODO: Este esta mal: No puedes buscar como key el nombre, son enteros. Sugerencia: Convertir a lista
+	 * e intentar hacer una búsqueda clasica, porque ni siquiera estamos buscando values, estamos buscando
+	 * un parametro (el nombre) de los objetos. 
+	 */
 	@SuppressWarnings("unlikely-arg-type")
 	public BankClient read(String clientName) {
 		BankClient client = null;

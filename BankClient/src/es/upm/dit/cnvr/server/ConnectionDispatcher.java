@@ -70,7 +70,7 @@ public class ConnectionDispatcher extends Thread {
                 	status = ServiceStatus.OK;
                 }
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_BANK)){
-                	//TODO: Ni puta de que hay que hacer aqu�
+                	//TODO: Ni puta de que hay que hacer aqui
                 }
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_CLIENT)){
                 	status = db.update(bc.getAccount(), bc.getBalance());
