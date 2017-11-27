@@ -12,14 +12,14 @@ public class TCPServer {
 
         Socket connectionSocket;
         int id = 0;
+        ClientDB db = new ClientDB();
 
         ServerSocket welcomeSocket = new ServerSocket(6789);
 
         while (true) {
             try {
                 connectionSocket = welcomeSocket.accept();
-                // TODO: NO CREAR CLIENTDB AQUI, inicializarlo antes y meterlo en la llamada.
-                ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id, new ClientDB());
+                ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id, db);
                 System.out.println("Get a socket connection");
                 conHandler.start();
                 id++;
