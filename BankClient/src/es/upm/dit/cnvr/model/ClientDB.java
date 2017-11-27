@@ -1,6 +1,8 @@
 package es.upm.dit.cnvr.model;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 public class ClientDB implements Serializable {
 	
@@ -52,18 +54,21 @@ public class ClientDB implements Serializable {
 	@SuppressWarnings("unlikely-arg-type")
 	public BankClient read(String clientName) {
 		BankClient client = null;
-		if (clientDB.containsKey(clientName)) {
-			client = clientDB.get(clientName);
-		}else {
-			client = null;
+		for (Map.Entry<Integer, BankClient> entry : clientDB.entrySet()){
+			if (entry.getValue().getClientName().equals(clientName)) client = entry.getValue();
 		}
 		return client;
 	}
-	
+	/* TODO: Comprobar si esto funciona: Antes era un int en el containsKey, pero dentro tenemos Integers
+	 * ahora no se si funcionara porque quiza no considere que es el mismo objeto (Integer) al haberse
+	 * creado de nuevo, aunque encapsule el mismo int. En el peor de los casos, habria que hacer iterando
+	 * como en el otro read
+	 */
 	public BankClient read(int clientAccount) {
 		BankClient client = null;
-		if (clientDB.containsKey(clientAccount)) {
-			client = clientDB.get(clientAccount);
+		Integer integerAccount = Integer.valueOf(clientAccount);
+		if (clientDB.containsKey(integerAccount)) {
+			client = clientDB.get(integerAccount);
 		}else {
 			client = null;
 		}
