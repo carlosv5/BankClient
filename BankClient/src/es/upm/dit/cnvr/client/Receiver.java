@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import es.upm.dit.cnvr.model.BankClient;
 import es.upm.dit.cnvr.model.Transaction;
+import es.upm.dit.cnvr.model.ServiceStatus;
 
 public class Receiver extends Thread{
 
@@ -40,8 +41,36 @@ public class Receiver extends Thread{
                 // 2. Read from the connection
                 transaction = (Transaction) inFromServer.readObject();
                 BankClient bc = transaction.getBankClient();
+                ServiceStatus status = transaction.getStatus();
+                System.out.println("<< Connection: Account recieved.");
+                System.out.println("<< The status of the operation is: " + status);
                 if (bc == null) break;
-                System.out.println("<< Connection: Account recieved " + bc.getClientName());
+                
+		        switch (transaction.getOperation().toString()) {
+	            case "CREATE_CLIENT":
+	            	if(status == ServiceStatus.OK)
+	                    System.out.println("<< Created client: " + transaction.getBankClient().getClientName());
+	                break;
+	            case "READ_CLIENT":	
+	            	if(status == ServiceStatus.OK)
+	                    System.out.println("<< Read client: " + transaction.getBankClient().getClientName());
+	                break;
+
+	            case "UPDATE_CLIENT":
+	            	if(status == ServiceStatus.OK)
+	                    System.out.println("<< Updated client: " + transaction.getBankClient().getClientName());
+	                break;
+
+	            case "DELETE_CLIENT":
+	            	if(status == ServiceStatus.OK)
+	                    System.out.println("<< Deleted client: " + transaction.getBankClient().getClientName());
+	                break;
+
+	            default:
+                    System.out.println("<< There is an error state, consult with the admin");
+	   }
+                System.out.println("<< ID: " + transaction.getBankClient().getAccount());
+                System.out.println("<< Balance " + transaction.getBankClient().getBalance());
                 nReceiver ++;
             } catch (Exception e) {
                 break;
