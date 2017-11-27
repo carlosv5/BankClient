@@ -112,16 +112,16 @@ public class ConnectionDispatcher extends Thread {
     //TODO Change in the method put of HashMap -> <String, BankClient>
     private static String generateId(int bloqDigits){
     	Random random = new Random();
-    	System.out.println(random.nextInt(16));
     	StringBuilder accountId = new StringBuilder();
-    	for(int i=0;i<bloqDigits;i++){
+    	accountId.append("EB32-");
+    	for(int i=0;i<bloqDigits-1;i++){
 	    	for(int j=0; j<4;j++){
 	    		accountId.append(Integer.toHexString(random.nextInt(16)));
 	    	}
-	    if(i!= bloqDigits -1)
+	    if(i!= bloqDigits -2)
 	    	accountId.append("-");
     	}
-    	return accountId.toString();
-    }  	
+    	return accountId.toString().toUpperCase();
+    }  
 
 }
