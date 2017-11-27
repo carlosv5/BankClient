@@ -3,6 +3,7 @@ package es.upm.dit.cnvr.server;
 import java.util.Random;
 
 import es.upm.dit.cnvr.model.BankClient;
+import es.upm.dit.cnvr.model.Transaction;
 
 import java.io.DataOutputStream;
 import java.io.ObjectOutputStream;
@@ -15,7 +16,7 @@ public class Handler extends Thread{
     private int id;
     // The order of the message received from the client
     private int sequence;
-    private BankClient bc;
+    private Transaction transaction;
     private Socket connection;
 
     /** Constructor
@@ -25,10 +26,10 @@ public class Handler extends Thread{
      * @param connection The connection for sending the processed information
      *                   to the client
      */
-    public Handler(int id, int sequence, BankClient bc, Socket connection) {
+    public Handler(int id, int sequence, Transaction transaction, Socket connection) {
         this.id         = id;
         this.sequence   = sequence;
-        this.bc    = bc;
+        this.transaction    = transaction;
         this.connection = connection;
     }
 
@@ -44,11 +45,11 @@ public class Handler extends Thread{
             Thread.sleep(random.nextInt(bound) * 1000);
 
             outToClient = new ObjectOutputStream(connection.getOutputStream());
-            outToClient.writeObject(bc);
+            outToClient.writeObject(transaction);
             outToClient.flush();
 
             //counter.Add()
-            System.out.println("<< Connection: Cuenta bancaria recibida de " + bc.getClientName());
+            System.out.println("<< Connection: Cuenta bancaria recibida de " + transaction.getBankClient().getClientName());
         } catch (InterruptedException e) {
 
         } catch (java.io.IOException e) {

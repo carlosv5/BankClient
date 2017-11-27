@@ -55,8 +55,6 @@ public class ConnectionDispatcher extends Thread {
                 if (transaction.getOperation().equals(OperationEnum.DELETE_CLIENT)){
                 	status = db.deleteClient(bc.getAccount());
                 	transaction.setStatus(status);
-                	// TODO: Implementar en ClientDB el ServiceStatus
-
                 }
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
                 	if (bc.getClientName() != null) {
@@ -79,8 +77,7 @@ public class ConnectionDispatcher extends Thread {
                 	transaction.setStatus(status);
                 }
                 
-                //TODO: Actualizar handler para que acepte transactions (quizá en vez de cuentas)
-                handler = new Handler(id, sequence, bc, connection);
+                handler = new Handler(id, sequence, transaction, connection);
                 handler.start();
                 sequence ++;
             }

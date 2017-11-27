@@ -32,12 +32,15 @@ public class ClientDB implements Serializable {
 	
 	public ServiceStatus readAccount(BankClient client) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		if (clientDB.containsKey(client.getAccount())) {
-			//read
-			stat = ServiceStatus.OK;
-		}else {
-			//client not in database
-			stat = ServiceStatus.INFORMATION_INVALID;
+		
+		if (client != null && client.getAccount() != 0) {
+			if (clientDB.containsKey(client.getAccount())) {
+				//read
+				stat = ServiceStatus.OK;
+			} else {
+				//client not in database
+				stat = ServiceStatus.INFORMATION_INVALID;
+			} 
 		}
 		return stat;
 	}
@@ -65,26 +68,30 @@ public class ClientDB implements Serializable {
 
 	//update?
 	
-	// TODO: Hay que meter que devuelvan services-status
-	public boolean update (int account, double balance) {
-		if (clientDB.containsKey(account)) {
-			BankClient client = clientDB.get(account);
-			client.setBalance(balance);
-			clientDB.put(client.getAccount(), client);
-			return true;
-		} else {
-			return false;
-		}	
+	public ServiceStatus update (int account, double balance) {
+		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
+		if (account != 0 && balance > 0) {
+			if (clientDB.containsKey(account)) {
+				BankClient client = clientDB.get(account);
+				client.setBalance(balance);
+				clientDB.put(client.getAccount(), client);
+				stat = ServiceStatus.OK;
+			} else {
+				stat = ServiceStatus.INFORMATION_INVALID;
+			} 
+		}
+		return stat;
 	}
 	
-	// TODO: Hay que meter que devuelvan services-status
-	public boolean deleteClient(Integer accountNumber) {
+	public ServiceStatus deleteClient(Integer accountNumber) {
+		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
 		if (clientDB.containsKey(accountNumber)) {
 			clientDB.remove(accountNumber);
-			return true;	
+			stat = ServiceStatus.OK;	
 		} else {
-			return false;
-		}	
+			stat = ServiceStatus.INFORMATION_INVALID;
+		}
+		return stat;
 	}
 
 	public boolean createBank(ClientDB clientDB) {
