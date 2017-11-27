@@ -70,12 +70,22 @@ public class ConnectionDispatcher extends Thread {
                 	status = ServiceStatus.OK;
                 }
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_BANK)){
-                	//TODO: Ni puta de que hay que hacer aquí
+                	//TODO: Ni puta de que hay que hacer aquï¿½
                 }
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_CLIENT)){
                 	status = db.update(bc.getAccount(), bc.getBalance());
                 	transaction.setStatus(status);
                 }
+                
+                if(es.upm.dit.cnvr.client.ClientApp.debug){
+                    	System.out.println("Debug operation");
+                    	System.out.println("Connection Dispatcher");
+                    	System.out.println("Operation: " + transaction.getOperation());
+                    	System.out.println("Account ID: " + transaction.getBankClient().getAccount());
+                    	System.out.println("Client Name: " + transaction.getBankClient().getClientName());
+                    	System.out.println("Balance: " + transaction.getBankClient().getBalance());
+
+                    }
                 
                 handler = new Handler(id, sequence, transaction, connection);
                 handler.start();

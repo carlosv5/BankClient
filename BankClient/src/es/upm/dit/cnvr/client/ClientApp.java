@@ -7,7 +7,7 @@ import es.upm.dit.cnvr.model.Transaction;
 
 public class ClientApp {
 	//Set true or false debug 
-	static boolean debug = true;
+	public static boolean debug = true;
     
 	public ClientApp() {
 		// TODO Auto-generated constructor stub
