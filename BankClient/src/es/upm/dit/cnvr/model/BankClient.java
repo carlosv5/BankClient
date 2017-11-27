@@ -3,12 +3,12 @@ package es.upm.dit.cnvr.model;
 import java.io.Serializable;
 
 public class BankClient implements Serializable {
-	private int account;
+	private String account;
 	private String clientName;
 	private double balance = 0;
 	
 	
-	public BankClient(int account, String clientName, double balance) {
+	public BankClient(String account, String clientName, double balance) {
 		this.account = account;
 		this.clientName = clientName;
 		this.balance = balance;
@@ -19,11 +19,11 @@ public class BankClient implements Serializable {
 
 	}
 
-	public int getAccount() {
+	public String getAccount() {
 		return account;
 	}
 
-	public void setAccount(int account) {
+	public void setAccount(String account) {
 		this.account = account;
 	}
 

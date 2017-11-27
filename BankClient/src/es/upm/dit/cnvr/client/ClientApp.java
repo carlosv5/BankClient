@@ -48,7 +48,7 @@ public class ClientApp {
 		    boolean result = false;
         	//Variables for method
         	OperationEnum op;
-        	int accountId = 0;
+        	String accountId = "0";
         	String clientName = "";
         	Double balance = 0.0;
 		        switch (input_parts[0]) {
@@ -73,7 +73,7 @@ public class ClientApp {
 		            	}
 		            	//Variables for method
 		            	op = OperationEnum.READ_CLIENT;
-		            	accountId = Integer.parseInt(input_parts[1]);
+		            	accountId = input_parts[1];
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		            	break;
@@ -85,7 +85,7 @@ public class ClientApp {
 		            	}
 		            	//Variables for method
 		            	op = OperationEnum.UPDATE_CLIENT;
-		            	accountId = Integer.parseInt(input_parts[1]);
+		            	accountId = input_parts[1];
 		            	balance = Double.parseDouble(input_parts[2]);
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
@@ -98,7 +98,7 @@ public class ClientApp {
 		            	}
 		            	//Variables for method
 		            	op = OperationEnum.DELETE_CLIENT;
-		            	accountId = Integer.parseInt(input_parts[1]);
+		            	accountId = input_parts[1];
 		                clientName = input_parts[2];
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);
@@ -119,7 +119,7 @@ public class ClientApp {
 	}
 	
 	
-	public static boolean operateAndSend(OperationEnum operation, int accountId,String clientName, double quantity){
+	public static boolean operateAndSend(OperationEnum operation, String accountId,String clientName, double quantity){
         if(debug){
         	System.out.println("Debug operation");
         	System.out.println("Operation: " + operation);

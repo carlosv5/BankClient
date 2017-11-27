@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.Random;
 
 import es.upm.dit.cnvr.client.OperationEnum;
 import es.upm.dit.cnvr.model.BankClient;
@@ -48,6 +49,7 @@ public class ConnectionDispatcher extends Thread {
                 transaction = (Transaction) inFromClient.readObject();
                 BankClient bc = transaction.getBankClient();
                 if (transaction.getOperation().equals(OperationEnum.CREATE_CLIENT)){
+                	bc.setAccount(generateId(2));
                 	status = db.createClient(bc);
                 	transaction.setStatus(status);
                 }
@@ -62,7 +64,7 @@ public class ConnectionDispatcher extends Thread {
                 		transaction.setBankClient(bc);
                 		transaction.setStatus(ServiceStatus.OK);
                 	}
-                	else if (bc.getAccount() != 0) {
+                	else if (bc.getAccount() != "0") {
                 		bc = db.read(bc.getAccount());
                 		transaction.setBankClient(bc);
                 		transaction.setStatus(ServiceStatus.OK);
@@ -107,5 +109,19 @@ public class ConnectionDispatcher extends Thread {
             e.printStackTrace();
         }
     }
+    //TODO Change in the method put of HashMap -> <String, BankClient>
+    private static String generateId(int bloqDigits){
+    	Random random = new Random();
+    	System.out.println(random.nextInt(16));
+    	StringBuilder accountId = new StringBuilder();
+    	for(int i=0;i<bloqDigits;i++){
+	    	for(int j=0; j<4;j++){
+	    		accountId.append(Integer.toHexString(random.nextInt(16)));
+	    	}
+	    if(i!= bloqDigits -1)
+	    	accountId.append("-");
+    	}
+    	return accountId.toString();
+    }  	
 
 }

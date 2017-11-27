@@ -34,7 +34,7 @@ public class ClientDB implements Serializable {
 	public ServiceStatus readAccount(BankClient client) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
 		
-		if (client != null && client.getAccount() != 0) {
+		if (client != null && !client.getAccount().equals("0")) {
 			if (clientDB.containsKey(client.getAccount())) {
 				//read
 				stat = ServiceStatus.OK;
@@ -46,7 +46,7 @@ public class ClientDB implements Serializable {
 		return stat;
 	}
 	/* TODO: Este esta mal: No puedes buscar como key el nombre, son enteros. Sugerencia: Convertir a lista
-	 * e intentar hacer una búsqueda clasica, porque ni siquiera estamos buscando values, estamos buscando
+	 * e intentar hacer una bï¿½squeda clasica, porque ni siquiera estamos buscando values, estamos buscando
 	 * un parametro (el nombre) de los objetos. 
 	 */
 	@SuppressWarnings("unlikely-arg-type")
@@ -72,11 +72,11 @@ public class ClientDB implements Serializable {
 
 	//update?
 	
-	public ServiceStatus update (int account, double balance) {
+	public ServiceStatus update (String string, double balance) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		if (account != 0 && balance > 0) {
-			if (clientDB.containsKey(account)) {
-				BankClient client = clientDB.get(account);
+		if (string.equals("0") && balance > 0) {
+			if (clientDB.containsKey(string)) {
+				BankClient client = clientDB.get(string);
 				client.setBalance(balance);
 				clientDB.put(client.getAccount(), client);
 				stat = ServiceStatus.OK;
@@ -87,10 +87,10 @@ public class ClientDB implements Serializable {
 		return stat;
 	}
 	
-	public ServiceStatus deleteClient(Integer accountNumber) {
+	public ServiceStatus deleteClient(String string) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		if (clientDB.containsKey(accountNumber)) {
-			clientDB.remove(accountNumber);
+		if (clientDB.containsKey(string)) {
+			clientDB.remove(string);
 			stat = ServiceStatus.OK;	
 		} else {
 			stat = ServiceStatus.INFORMATION_INVALID;
