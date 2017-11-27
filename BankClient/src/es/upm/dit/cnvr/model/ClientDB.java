@@ -47,10 +47,7 @@ public class ClientDB implements Serializable {
 		}
 		return stat;
 	}
-	/* TODO: Este esta mal: No puedes buscar como key el nombre, son enteros. Sugerencia: Convertir a lista
-	 * e intentar hacer una búsqueda clasica, porque ni siquiera estamos buscando values, estamos buscando
-	 * un parametro (el nombre) de los objetos. 
-	 */
+
 	@SuppressWarnings("unlikely-arg-type")
 	public BankClient read(String clientName) {
 		BankClient client = null;
@@ -63,15 +60,22 @@ public class ClientDB implements Serializable {
 	 * ahora no se si funcionara porque quiza no considere que es el mismo objeto (Integer) al haberse
 	 * creado de nuevo, aunque encapsule el mismo int. En el peor de los casos, habria que hacer iterando
 	 * como en el otro read
+	 * 
+	 * Actualizacion: Arreglado, dejo en comentario lo anterior, por si las moscas. Dejo el todo tambien
+	 * para acordarnos de ello y borrarlo al final
 	 */
 	public BankClient read(int clientAccount) {
 		BankClient client = null;
-		Integer integerAccount = Integer.valueOf(clientAccount);
-		if (clientDB.containsKey(integerAccount)) {
-			client = clientDB.get(integerAccount);
-		}else {
-			client = null;
+		
+		for (Map.Entry<Integer, BankClient> entry : clientDB.entrySet()){
+			if (entry.getKey().intValue() == clientAccount) client = entry.getValue();
 		}
+		
+//		if (clientDB.containsKey(clientAccount)) {
+//			client = clientDB.get(clientAccount);
+//		}else {
+//			client = null;
+//		}
 		return client;
 	}
 
