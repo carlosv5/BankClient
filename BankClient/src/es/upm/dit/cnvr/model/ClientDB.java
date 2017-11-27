@@ -22,6 +22,7 @@ public class ClientDB implements Serializable {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
 		if (clientDB.containsKey(client.getAccount())) {
 			//it already exists
+			// TODO: Ahora mismo no hace nada, hay que implementar que se meta en el hashtable el cliente.
 			stat = ServiceStatus.EXISTING_CLIENT; 
 		}else {
 			//create
