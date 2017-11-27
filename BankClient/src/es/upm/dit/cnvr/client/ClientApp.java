@@ -3,6 +3,7 @@ package es.upm.dit.cnvr.client;
 import java.util.Scanner;
 
 import es.upm.dit.cnvr.model.BankClient;
+import es.upm.dit.cnvr.model.Transaction;
 
 public class ClientApp {
 	//Set true or false debug 

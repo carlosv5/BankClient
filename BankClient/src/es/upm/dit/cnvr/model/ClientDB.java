@@ -18,7 +18,7 @@ public class ClientDB implements Serializable {
 		return this.clientDB;
 	}
 	
-	public ServiceStatus create(BankClient client) {
+	public ServiceStatus createClient(BankClient client) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
 		if (clientDB.containsKey(client.getAccount())) {
 			//it already exists
@@ -64,7 +64,9 @@ public class ClientDB implements Serializable {
 	}
 
 	//update?
-	public boolean update (int account, int balance) {
+	
+	// TODO: Hay que meter que devuelvan services-status
+	public boolean update (int account, double balance) {
 		if (clientDB.containsKey(account)) {
 			BankClient client = clientDB.get(account);
 			client.setBalance(balance);
@@ -74,7 +76,8 @@ public class ClientDB implements Serializable {
 			return false;
 		}	
 	}
-
+	
+	// TODO: Hay que meter que devuelvan services-status
 	public boolean deleteClient(Integer accountNumber) {
 		if (clientDB.containsKey(accountNumber)) {
 			clientDB.remove(accountNumber);

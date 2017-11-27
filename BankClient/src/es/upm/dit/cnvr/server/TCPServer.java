@@ -1,9 +1,9 @@
-package es.upm.dit.cnvr.model;
+package es.upm.dit.cnvr.server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import es.upm.dit.cnvr.server.ConnectionDispatcher;
+import es.upm.dit.cnvr.model.ClientDB;
 
 
 public class TCPServer {
@@ -19,7 +19,7 @@ public class TCPServer {
             try {
                 connectionSocket = welcomeSocket.accept();
 
-                ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id);
+                ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id, new ClientDB());
                 System.out.println("Get a socket connection");
                 conHandler.start();
                 id++;

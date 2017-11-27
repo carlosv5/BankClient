@@ -1,12 +1,13 @@
-package es.upm.dit.cnvr.client;
+package es.upm.dit.cnvr.model;
 
 import java.io.Serializable;
 
-import es.upm.dit.cnvr.model.BankClient;
+import es.upm.dit.cnvr.client.OperationEnum;
 
 public class Transaction implements Serializable {
 	private OperationEnum operation;
 	private BankClient bankClient;
+	private ServiceStatus status;
 
 	public Transaction(OperationEnum op, BankClient bc) {
 		// TODO Auto-generated constructor stub
@@ -34,6 +35,14 @@ public class Transaction implements Serializable {
 	public String toString() {
 		return "Transaction [operation=" + operation + ", bankClient="
 				+ bankClient + "]";
+	}
+
+	public ServiceStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ServiceStatus status) {
+		this.status = status;
 	}
 
 
