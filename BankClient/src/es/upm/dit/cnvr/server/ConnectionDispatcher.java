@@ -55,7 +55,10 @@ public class ConnectionDispatcher extends Thread {
                 }
                 
                 if (transaction.getOperation().equals(OperationEnum.DELETE_CLIENT)){
-                	status = db.deleteClient(bc.getAccount());
+        			if(es.upm.dit.cnvr.client.ClientApp.debug)
+        				System.out.println("Operacion de borrado");
+     
+                	status = db.deleteClient(bc.getAccount(),bc.getClientName());
                 	transaction.setStatus(status);
                 }
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){

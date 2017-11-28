@@ -91,13 +91,17 @@ public class ClientDB implements Serializable {
 		return stat;
 	}
 	
-	public ServiceStatus deleteClient(String string) {
+	public ServiceStatus deleteClient(String accountId, String clientName) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		if (clientDB.containsKey(string)) {
-			clientDB.remove(string);
+		if (clientDB.containsKey(accountId) && (clientDB.get(accountId).getClientName().equals(clientName))) {
+			clientDB.remove(accountId);
 			stat = ServiceStatus.OK;	
 		} else {
 			stat = ServiceStatus.INFORMATION_INVALID;
+		}
+		if(es.upm.dit.cnvr.client.ClientApp.debug){
+			System.out.println("DB has: ");
+			System.out.println(clientDB.toString());
 		}
 		return stat;
 	}
