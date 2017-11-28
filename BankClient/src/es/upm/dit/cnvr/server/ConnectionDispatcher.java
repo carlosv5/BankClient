@@ -55,18 +55,10 @@ public class ConnectionDispatcher extends Thread {
                 }
                 
                 if (transaction.getOperation().equals(OperationEnum.DELETE_CLIENT)){
-        			if(es.upm.dit.cnvr.client.ClientApp.debug)
-        				System.out.println("Operacion de borrado");
-     
                 	status = db.deleteClient(bc.getAccount(),bc.getClientName());
                 	transaction.setStatus(status);
                 }
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
-//                	if (bc.getClientName() != null) {
-//                		bc = db.readById(bc.getAccount());
-//                		transaction.setBankClient(bc);
-//                		transaction.setStatus(ServiceStatus.OK);
-//                	} else
                 	if (bc.getAccount() != "0") {
                 		bc = db.readById(bc.getAccount());
                 		transaction.setBankClient(bc);
@@ -75,7 +67,7 @@ public class ConnectionDispatcher extends Thread {
                 	status = ServiceStatus.OK;
                 }
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_BANK)){
-                	//TODO: Ni puta de que hay que hacer aqui
+                	//TODO: Ni puta de que hay que hacer aqui - Yo creo que este metodo era para pasar el estado de la base de datos, pero eso no lo vamos a hacer
                 }
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_CLIENT)){
                 	status = db.update(bc.getAccount(), bc.getBalance());
