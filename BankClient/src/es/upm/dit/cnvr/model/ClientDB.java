@@ -37,10 +37,12 @@ public class ClientDB implements Serializable {
 		}
 		return stat;
 	}
-	
+
+
 	public BankClient readAccount(String clientAccount) {
 		BankClient client = null;
-		if (clientDB.containsKey(clientAccount)) client = clientDB.get(clientAccount);
+		if (clientDB.containsKey(clientAccount)) 
+			client = clientDB.get(clientAccount);
 		if(es.upm.dit.cnvr.client.ClientApp.debug){
 			System.out.println("DB has: ");
 			System.out.println(clientDB.toString());
@@ -50,8 +52,7 @@ public class ClientDB implements Serializable {
 	
 	public ServiceStatus update (String accountId, double balance) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		if (balance > 0) {
-			if (clientDB.containsKey(accountId)) {
+		if (balance > 0 &&  clientDB.containsKey(accountId)){
 				BankClient client = clientDB.get(accountId);
 				client.setBalance(balance);
 				clientDB.put(client.getAccount(), client);
@@ -59,7 +60,6 @@ public class ClientDB implements Serializable {
 			} else {
 				stat = ServiceStatus.INFORMATION_INVALID;
 			} 
-		}
 		if(es.upm.dit.cnvr.client.ClientApp.debug){
 			System.out.println("DB has: ");
 			System.out.println(clientDB.toString());
