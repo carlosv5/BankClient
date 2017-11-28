@@ -38,37 +38,7 @@ public class ClientDB implements Serializable {
 		return stat;
 	}
 	
-	public ServiceStatus readAccount(BankClient client) {
-		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		
-		if (client != null && !client.getAccount().equals("0")) {
-			if (clientDB.containsKey(client.getAccount())) {
-				//read
-				stat = ServiceStatus.OK;
-			} else {
-				//client not in database
-				stat = ServiceStatus.INFORMATION_INVALID;
-			} 
-		}
-		return stat;
-	}
-	/* TODO: -SOLUCIONADO- Este esta mal: No puedes buscar como key el nombre, son enteros. Sugerencia: Convertir a lista
-	 * e intentar hacer una busqueda clasica, porque ni siquiera estamos buscando values, estamos buscando
-	 * un parametro (el nombre) de los objetos.
-	 * 
-	 * Act1: Solucionado.
-	 * Este metodo no tiene sentido! No podemos buscar una cuenta por el nombre del cliente
-	 */
-
-//	public BankClient readByClient(String clientName) {
-//		BankClient client = null;
-//		for (Map.Entry<String, BankClient> entry : clientDB.entrySet()){
-//			if (entry.getValue().getClientName().equals(clientName)) client = entry.getValue();
-//		}
-//		return client;
-//	}
-
-	public BankClient readById(String clientAccount) {
+	public BankClient readAccount(String clientAccount) {
 		BankClient client = null;
 		if (clientDB.containsKey(clientAccount)) client = clientDB.get(clientAccount);
 		if(es.upm.dit.cnvr.client.ClientApp.debug){
@@ -77,8 +47,6 @@ public class ClientDB implements Serializable {
 		}
 		return client;
 	}
-
-	//update?
 	
 	public ServiceStatus update (String accountId, double balance) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;

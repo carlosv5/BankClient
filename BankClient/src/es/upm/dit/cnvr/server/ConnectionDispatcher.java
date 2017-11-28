@@ -60,7 +60,7 @@ public class ConnectionDispatcher extends Thread {
                 }
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
                 	if (bc.getAccount() != "0") {
-                		bc = db.readById(bc.getAccount());
+                		bc = db.readAccount(bc.getAccount());
                 		transaction.setBankClient(bc);
                 		transaction.setStatus(ServiceStatus.OK);
                 	}
