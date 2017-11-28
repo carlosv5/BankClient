@@ -29,6 +29,10 @@ public class ClientDB implements Serializable {
 		}else {
 			// It doesn't exists: We create it
 			clientDB.put(client.getAccount(), client);
+			if(es.upm.dit.cnvr.client.ClientApp.debug){
+				System.out.println("DB has: ");
+				System.out.println(clientDB.toString());
+			}
 			stat = ServiceStatus.OK;
 		}
 		return stat;
@@ -53,19 +57,19 @@ public class ClientDB implements Serializable {
 	 * un parametro (el nombre) de los objetos.
 	 * 
 	 * Act1: Solucionado.
+	 * Este metodo no tiene sentido! No podemos buscar una cuenta por el nombre del cliente
 	 */
 
-	public BankClient readByClient(String clientName) {
-		BankClient client = null;
-		for (Map.Entry<String, BankClient> entry : clientDB.entrySet()){
-			if (entry.getValue().getClientName().equals(clientName)) client = entry.getValue();
-		}
-		return client;
-	}
+//	public BankClient readByClient(String clientName) {
+//		BankClient client = null;
+//		for (Map.Entry<String, BankClient> entry : clientDB.entrySet()){
+//			if (entry.getValue().getClientName().equals(clientName)) client = entry.getValue();
+//		}
+//		return client;
+//	}
 
 	public BankClient readById(String clientAccount) {
 		BankClient client = null;
-
 		if (clientDB.containsKey(clientAccount)) client = clientDB.get(clientAccount);
 		return client;
 	}

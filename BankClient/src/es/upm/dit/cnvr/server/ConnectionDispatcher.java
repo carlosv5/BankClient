@@ -59,12 +59,12 @@ public class ConnectionDispatcher extends Thread {
                 	transaction.setStatus(status);
                 }
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
-                	if (bc.getClientName() != null) {
-                		bc = db.readByClient(bc.getClientName());
-                		transaction.setBankClient(bc);
-                		transaction.setStatus(ServiceStatus.OK);
-                	}
-                	else if (bc.getAccount() != "0") {
+//                	if (bc.getClientName() != null) {
+//                		bc = db.readById(bc.getAccount());
+//                		transaction.setBankClient(bc);
+//                		transaction.setStatus(ServiceStatus.OK);
+//                	} else
+                	if (bc.getAccount() != "0") {
                 		bc = db.readById(bc.getAccount());
                 		transaction.setBankClient(bc);
                 		transaction.setStatus(ServiceStatus.OK);
