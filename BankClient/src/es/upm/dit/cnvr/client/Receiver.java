@@ -77,9 +77,11 @@ public class Receiver extends Thread{
             }
         }
         try {
+        	if(ClientApp.debug)
             System.out.println("Socket closed.");
             clientSocket.close();
         } catch (Exception e) { // IOException
+        	if(ClientApp.debug)
             System.out.println("Unexpected exception " + e);
         }
     }

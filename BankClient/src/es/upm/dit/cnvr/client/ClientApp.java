@@ -1,6 +1,7 @@
 package es.upm.dit.cnvr.client;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import es.upm.dit.cnvr.model.BankClient;
 import es.upm.dit.cnvr.model.Transaction;
@@ -110,10 +111,16 @@ public class ClientApp {
 		        		System.out.println("This is not an available operation.");
 		            	showOptions();
 		   }
+		        try {
+					TimeUnit.SECONDS.sleep(3);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		        if(result){
-		        	System.out.println("Successful operation");
+		        	System.out.println(">>Successful operation");
 		        } else{
-		        	System.out.println("Unsuccessful operation");
+		        	System.out.println(">>Unsuccessful operation");
 		        }
 		}
 	}
