@@ -1,5 +1,8 @@
 package es.upm.dit.cnvr.server;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -18,29 +21,33 @@ import org.apache.zookeeper.data.Stat;
 import es.upm.dit.cnvr.model.OperationEnum;
 import es.upm.dit.cnvr.model.Transaction;
 
+// This class only create the znodes, it doesn't do any operation actually.
+
 public class Operate{
 
-	private int nCounters;
 	private ZooKeeper zk;
 	
 	private String rootOperate = "/operation";
 	private  int personalCounter = 0;
 	private  int zkCounter = 0;
-	private List<String> listCounter = null;
-
+	
 	public Operate(ZooKeeper zk) {
 		this.zk = zk;
 		
 		configure();
 		}
 	
-	public byte[] createByte(OperationEnum operation){
-		byte[] data = operation.toString().getBytes(Charset.forName("UTF-8"));
+	public byte[] createByte(Transaction transaction){
+		byte[] data = transaction.toString().getBytes(Charset.forName("UTF-8"));
 		return data;
 	}
-	public String readData(byte[] data){
-		String string = new String(data, StandardCharsets.UTF_8);
-		return string;
+	public Transaction readData(byte[] data) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream in = new ByteArrayInputStream(data);
+	    ObjectInputStream is = new ObjectInputStream(in);
+	    return (Transaction) is.readObject();
+		
+//		String string = new String(data, StandardCharsets.UTF_8);
+//		return string;
 	}
 
 	public int getPersonalCounter() {
@@ -59,7 +66,7 @@ public class Operate{
 		this.zkCounter = zkCounter;
 	}
 	
-	public void operation(OperationEnum operation){
+	public void operation(Transaction transaction) throws ClassNotFoundException, IOException{
 		String name="";
 		try {
 			name = new String(InetAddress.getLocalHost().getCanonicalHostName().toString());
@@ -67,7 +74,7 @@ public class Operate{
 			e.printStackTrace();
 		}
 		//TO CREATE THE OPERATION
-		byte[] data = createByte(operation);
+		byte[] data = createByte(transaction);
 		String node = "";
 		try {
 			node = zk.create(rootOperate + "/" + name, data, Ids.OPEN_ACL_UNSAFE,
@@ -78,7 +85,7 @@ public class Operate{
 			e.printStackTrace();
 		}
 		//TO READ NODE OPERATION
-		System.out.println("Los datos guardados son: " + readData(data));
+		System.out.println("Los datos guardados son: " + readData(data).toString());
 		System.out.println("Created znode counter id:" + node);
 		try {
 			zk.getChildren(rootOperate, false, null);
