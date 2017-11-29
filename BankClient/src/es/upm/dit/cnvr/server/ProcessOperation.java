@@ -1,6 +1,9 @@
 package es.upm.dit.cnvr.server;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -11,9 +14,11 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 
+import es.upm.dit.cnvr.model.BankClient;
 import es.upm.dit.cnvr.model.ClientDB;
 import es.upm.dit.cnvr.model.OperationEnum;
 import es.upm.dit.cnvr.model.ServiceStatus;
+import es.upm.dit.cnvr.model.Transaction;
 
 public class ProcessOperation extends Thread{
 
@@ -27,6 +32,8 @@ public class ProcessOperation extends Thread{
 	private Integer mutexBarrier;
 	private static String rootBarrier = "/boperation";
 	private ClientDB db = ClientDB.getInstance();
+	private Transaction transaction;
+	private BankClient bc;
 
 	public ProcessOperation(ZooKeeper zk, Watcher counterWatcherP, Integer mutex, Integer mutexBarrier, Operate operate) {
 		this.zk = zk;
@@ -40,9 +47,13 @@ public class ProcessOperation extends Thread{
 		byte[] data = operation.toString().getBytes(Charset.forName("UTF-8"));
 		return data;
 	}
-	public String readData(byte[] data){
-		String string = new String(data, StandardCharsets.UTF_8);
-		return string;
+	public Transaction readData(byte[] data) throws IOException, ClassNotFoundException {
+		ByteArrayInputStream in = new ByteArrayInputStream(data);
+	    ObjectInputStream is = new ObjectInputStream(in);
+	    return (Transaction) is.readObject();
+		
+//		String string = new String(data, StandardCharsets.UTF_8);
+//		return string;
 	}
 	//TODO: Esto todavia no se ha mirado.
 	@Override
@@ -77,14 +88,16 @@ public class ProcessOperation extends Thread{
 						try {
 							op = zk.getData(rootOperation+"/" +listCounter.get(i),false, null);
 							//TODO: Cambiar esto por las mierdas verdaderas (Operaciones verdaderas)
+							transaction = readData(op);
+							bc = transaction.getBankClient();
 							
 							if (readData(op).equals(OperationEnum.CREATE_CLIENT)){
-			                	bc.setAccount(generateId(2));
+			                	db.createClient(bc);
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
 			                }
 			                
 			                if (readData(op).equals(OperationEnum.DELETE_CLIENT)){
-			                	status = db.deleteClient(bc.getAccount(),bc.getClientName());
+			                	db.deleteClient(bc.getAccount(),bc.getClientName());
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
 			                }
 			                if (readData(op).equals(OperationEnum.READ_CLIENT)){
@@ -92,20 +105,13 @@ public class ProcessOperation extends Thread{
 			                		bc = db.readAccount(bc.getAccount());
 			                    	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
 			                	}
-			                	status = ServiceStatus.OK;
 			                }
 			                if (readData(op).equals(OperationEnum.UPDATE_BANK)){
 			                }
 			                if (readData(op).equals(OperationEnum.UPDATE_CLIENT)){
-			                	status = db.update(bc.getAccount(), bc.getBalance());
-			                	transaction.setStatus(status);
+			                	db.update(bc.getAccount(), bc.getBalance());
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1);
 			                }
-							
-							
-							
-							
-							
 							
 //							if(readData(op).equals(OperationEnum.ADD.toString())){
 //								System.out.println("La cuenta es antes: " + operate.getZkCounter());

@@ -57,15 +57,16 @@ public class ConnectionDispatcher extends Thread {
                 if (transaction.getOperation().equals(OperationEnum.CREATE_CLIENT)){
                 	bc.setAccount(generateId(2));
                 	status = db.createClient(bc);
+                	transaction.setBankClient(bc);
                 	transaction.setStatus(status);
-                	operate.operation(transaction.getOperation());
+                	operate.operation(transaction);
                 	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 }
                 
                 if (transaction.getOperation().equals(OperationEnum.DELETE_CLIENT)){
                 	status = db.deleteClient(bc.getAccount(),bc.getClientName());
                 	transaction.setStatus(status);
-                	operate.operation(transaction.getOperation());
+                	operate.operation(transaction);
                 	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 }
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
@@ -73,7 +74,7 @@ public class ConnectionDispatcher extends Thread {
                 		bc = db.readAccount(bc.getAccount());
                 		transaction.setBankClient(bc);
                 		transaction.setStatus(ServiceStatus.OK);
-                    	operate.operation(transaction.getOperation());
+                    	operate.operation(transaction);
                     	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 	}
                 	status = ServiceStatus.OK;
@@ -84,7 +85,7 @@ public class ConnectionDispatcher extends Thread {
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_CLIENT)){
                 	status = db.update(bc.getAccount(), bc.getBalance());
                 	transaction.setStatus(status);
-                	operate.operation(transaction.getOperation());
+                	operate.operation(transaction);
                 	operate.setPersonalCounter(operate.getPersonalCounter()+1);
                 }
                 
