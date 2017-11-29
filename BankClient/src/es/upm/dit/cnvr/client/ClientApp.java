@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import es.upm.dit.cnvr.model.BankClient;
+import es.upm.dit.cnvr.model.OperationEnum;
 import es.upm.dit.cnvr.model.Transaction;
 
 public class ClientApp {
@@ -114,7 +115,6 @@ public class ClientApp {
 		        try {
 					TimeUnit.SECONDS.sleep(3);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		        if(result){

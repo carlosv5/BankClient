@@ -8,9 +8,9 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Random;
 
-import es.upm.dit.cnvr.client.OperationEnum;
 import es.upm.dit.cnvr.model.BankClient;
 import es.upm.dit.cnvr.model.ClientDB;
+import es.upm.dit.cnvr.model.OperationEnum;
 import es.upm.dit.cnvr.model.ServiceStatus;
 import es.upm.dit.cnvr.model.Transaction;
 import es.upm.dit.cnvr.model.ServiceStatus;
@@ -23,16 +23,20 @@ public class ConnectionDispatcher extends Thread {
     private DataOutputStream outToClient;
     private ClientDB db;
     private int id;
+    private Zookeeper zk;
+	private Operate operate;
 
     /**
      * Constructor
      * @param id The identifier of the connection
      * @param connection The connection handle for sending a message to the client
      */
-    public ConnectionDispatcher(Socket connection, int id, ClientDB db) {
+    public ConnectionDispatcher(Socket connection, int id, ClientDB db, Zookeeper zk, Operate operate) {
         this.connection = connection;
         this.id         = id;
         this.db			= db;
+        this.zk			= zk;
+        this.operate	= operate;
     }
 
     public void run () {
@@ -47,22 +51,30 @@ public class ConnectionDispatcher extends Thread {
 
             while (true) {
                 transaction = (Transaction) inFromClient.readObject();
-                BankClient bc = transaction.getBankClient();
+                // TODO: Hace falta de alguna forma pasar el BankClient al ProcessOperator, o meterlo en los znodes... Quiza meter transactions en vez de operaciones?
+                BankClient bc = transaction.getBankClient();                
+                //TODO: Deberiamos meter comprobaciones para que si la operacion no la realiza bien que no cree los nodos de operaciones
                 if (transaction.getOperation().equals(OperationEnum.CREATE_CLIENT)){
                 	bc.setAccount(generateId(2));
                 	status = db.createClient(bc);
                 	transaction.setStatus(status);
+                	operate.operation(transaction.getOperation());
+                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 }
                 
                 if (transaction.getOperation().equals(OperationEnum.DELETE_CLIENT)){
                 	status = db.deleteClient(bc.getAccount(),bc.getClientName());
                 	transaction.setStatus(status);
+                	operate.operation(transaction.getOperation());
+                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 }
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
                 	if (bc.getAccount() != "0") {
                 		bc = db.readAccount(bc.getAccount());
                 		transaction.setBankClient(bc);
                 		transaction.setStatus(ServiceStatus.OK);
+                    	operate.operation(transaction.getOperation());
+                    	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 	}
                 	status = ServiceStatus.OK;
                 }
@@ -72,6 +84,8 @@ public class ConnectionDispatcher extends Thread {
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_CLIENT)){
                 	status = db.update(bc.getAccount(), bc.getBalance());
                 	transaction.setStatus(status);
+                	operate.operation(transaction.getOperation());
+                	operate.setPersonalCounter(operate.getPersonalCounter()+1);
                 }
                 
                 if(es.upm.dit.cnvr.client.ClientApp.debug){

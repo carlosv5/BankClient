@@ -8,9 +8,20 @@ import java.util.Map;
 public class ClientDB implements Serializable {
 	
 	private java.util.HashMap <String, BankClient> clientDB;
+	
+	// Singleton
+	
+	private static ClientDB instance = null;
 
-	public ClientDB() {
+	private ClientDB() {
 		clientDB = new java.util.HashMap <String, BankClient>();
+	}
+	
+	public static ClientDB getInstance() {
+		if (instance == null) {
+			instance = new ClientDB();
+		}
+		return instance;
 	}
 	
 	public ClientDB (ClientDB clientDB) {

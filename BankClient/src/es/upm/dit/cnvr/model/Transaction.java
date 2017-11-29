@@ -2,8 +2,6 @@ package es.upm.dit.cnvr.model;
 
 import java.io.Serializable;
 
-import es.upm.dit.cnvr.client.OperationEnum;
-
 public class Transaction implements Serializable {
 	private OperationEnum operation;
 	private BankClient bankClient;

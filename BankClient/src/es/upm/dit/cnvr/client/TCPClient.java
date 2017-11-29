@@ -6,6 +6,7 @@ import java.net.*;
 import java.util.Random;
 
 import es.upm.dit.cnvr.model.BankClient;
+import es.upm.dit.cnvr.model.OperationEnum;
 import es.upm.dit.cnvr.model.Transaction;
 
 
