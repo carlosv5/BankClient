@@ -28,14 +28,15 @@ public class ConnectionDispatcher extends Thread {
     private ZookeeperObject zkobject;
 	private Operate operate;
 	private ZooKeeper zk = ZookeeperObject.getZk();
-	private static String rootBarrier = "/boperation";
-
-
+	private static String rootBarrierOperation = "/boperation";
 
     /**
      * Constructor
      * @param id The identifier of the connection
      * @param connection The connection handle for sending a message to the client
+     * @param db The database of clients
+     * @param zkobject The object that administer zookeeper
+     * @param operate The object that create the znodes of the operations
      */
     public ConnectionDispatcher(Socket connection, int id, ClientDB db, ZookeeperObject zkobject, Operate operate) {
         this.connection = connection;
@@ -56,11 +57,14 @@ public class ConnectionDispatcher extends Thread {
             inFromClient = new ObjectInputStream(connection.getInputStream());
 
             while (true) {
-            	if (zk.getChildren(rootBarrier, false).size() > 0){
+            	if (zk.getChildren(rootBarrierOperation, false).size() > 0){
+
             		synchronized(ZookeeperObject.getMutexOperate()){
             			ZookeeperObject.getMutexOperate().wait();
+
             		}
             	}
+
                 transaction = (Transaction) inFromClient.readObject();
                 BankClient bc = transaction.getBankClient();                
                 //TODO: Deberiamos meter comprobaciones para que si la operacion no la realiza bien que no cree los nodos de operaciones
@@ -69,16 +73,21 @@ public class ConnectionDispatcher extends Thread {
                 	status = db.createClient(bc);
                 	transaction.setBankClient(bc);
                 	transaction.setStatus(status);
-                	operate.operation(transaction);
-                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
+                	if (status.equals(ServiceStatus.OK)){
+                		operate.operation(transaction);
+                    	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
+                	}
                 }
                 
                 if (transaction.getOperation().equals(OperationEnum.DELETE_CLIENT)){
                 	status = db.deleteClient(bc.getAccount(),bc.getClientName());
                 	transaction.setStatus(status);
-                	operate.operation(transaction);
-                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
+                	if (status.equals(ServiceStatus.OK)){
+                		operate.operation(transaction);
+                    	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
+                	}  	
                 }
+                
                 //TODO: Quitar en ProcessOperation, no es necesario
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
                 	if (bc.getAccount() != "0") {
@@ -92,8 +101,10 @@ public class ConnectionDispatcher extends Thread {
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_CLIENT)){
                 	status = db.update(bc.getAccount(), bc.getBalance());
                 	transaction.setStatus(status);
-                	operate.operation(transaction);
-                	operate.setPersonalCounter(operate.getPersonalCounter()+1);
+                	if (status.equals(ServiceStatus.OK)){
+                		operate.operation(transaction);
+                    	operate.setPersonalCounter(operate.getPersonalCounter()+1);
+                	}
                 }
                 
                 if(es.upm.dit.cnvr.client.ClientApp.debug){

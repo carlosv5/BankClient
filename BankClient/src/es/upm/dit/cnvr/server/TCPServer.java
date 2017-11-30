@@ -27,6 +27,7 @@ public class TCPServer {
                 ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id, db, zkobject, operate);
                 System.out.println("Get a socket connection");
                 conHandler.start();
+                System.out.println("Reach after start");
                 id++;
             } catch (Exception e) {
                 System.out.println("Closed the socket");

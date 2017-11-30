@@ -1,8 +1,10 @@
 package es.upm.dit.cnvr.server;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -31,7 +33,6 @@ public class Operate{
 	
 	private String rootOperate = "/operation";
 	private  int personalCounter = 0;
-	private  int zkCounter = 0;
 	
 	public Operate(ZooKeeper zk) {
 		this.zk = zk;
@@ -39,9 +40,11 @@ public class Operate{
 		configure();
 		}
 	
-	public byte[] createByte(Transaction transaction){
-		byte[] data = transaction.toString().getBytes(Charset.forName("UTF-8"));
-		return data;
+	public byte[] createByte(Transaction transaction) throws IOException{
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+	    ObjectOutputStream os = new ObjectOutputStream(out);
+	    os.writeObject(transaction);
+		return out.toByteArray();
 	}
 	public Transaction readData(byte[] data) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
@@ -62,14 +65,6 @@ public class Operate{
 	public void setPersonalCounter(int personalCounter) {
 		this.personalCounter = personalCounter;
 	}
-
-	public int getZkCounter() {
-		return zkCounter;
-	}
-
-	public void setZkCounter(int zkCounter) {
-		this.zkCounter = zkCounter;
-	}
 	
 	public void operation(Transaction transaction) throws ClassNotFoundException, IOException{
 		String name="";
@@ -82,16 +77,17 @@ public class Operate{
 		byte[] data = createByte(transaction);
 		String node = "";
 		try {
+			//XXX: CAMBIAR EPHEMERAL POR PERSISTENT
 			node = zk.create(rootOperate + "/" + name, data, Ids.OPEN_ACL_UNSAFE,
-					CreateMode.PERSISTENT_SEQUENTIAL);
+					CreateMode.EPHEMERAL_SEQUENTIAL);
 		} catch (KeeperException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		//TO READ NODE OPERATION
-		System.out.println("Los datos guardados son: " + readData(data).toString());
 		System.out.println("Created znode counter id:" + node);
+
 		try {
 			zk.getChildren(rootOperate, false, null);
 		} catch (KeeperException e) {

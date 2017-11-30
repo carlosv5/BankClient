@@ -24,6 +24,7 @@ public class ZookeeperObject implements Watcher{
 	private static ZooKeeper zk = null;
 	private static String rootMembers = "/members";
 	private static String rootBarrier = "/b1";
+	private static String rootBarrierOperation = "/boperation";
 	private static String aMember = "/member-";
 	private static int nMembers  = 0;
 	private static int nBarriers = 0;
@@ -39,9 +40,13 @@ public class ZookeeperObject implements Watcher{
 	private static final int SESSION_TIMEOUT = 5000;
 	private String myId = null;
 	
-	private String rootCounter = "/counter";
+	private String rootOperation = "/operation";
 	private static Operate operate;
 
+	/**
+	 * Constructor
+	 *
+	 */
 	public ZookeeperObject() { 
 
 	}
@@ -57,7 +62,7 @@ public class ZookeeperObject implements Watcher{
 	public void configure() {	
 		System.out.println("START CONFIGURE");
 		// This is static. A list of zookeeper can be provided for decide where to connect
-		String[] hosts = {"127.0.0.1:2181", "127.0.0.1:2182"};
+		String[] hosts = {"138.4.31.99:2181", "138.4.31.98:2182"};
 
 		// Select a random zookeeper server
 		Random rand = new Random();
@@ -126,11 +131,34 @@ public class ZookeeperObject implements Watcher{
 								CreateMode.PERSISTENT);
 					}
 
-					getZk().create(rootBarrier, new byte[0],
-							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+//					getZk().create(rootBarrier, new byte[0],
+//							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
 					//myId = myId.replace(rootMembers + "/", "");
 					// false. Debe esperar a arrancar el barrir
 					getZk().getChildren(rootBarrier,  barrierWatcher, s);
+
+				} catch (KeeperException e) {
+					System.out
+					.println("Keeper exception when instantiating queue: "
+							+ e.toString());
+				} catch (InterruptedException e) {
+					System.out.println("Interrupted exception");
+				}
+			}
+			// Create the /b1 znode
+			if (getZk() != null) {
+				try {
+					Stat s = getZk().exists(rootBarrierOperation, false);
+					if (s == null) {
+						getZk().create(rootBarrierOperation, new byte[0], Ids.OPEN_ACL_UNSAFE,
+								CreateMode.PERSISTENT);
+					}
+
+//					getZk().create(rootBarrier, new byte[0],
+//							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
+					//myId = myId.replace(rootMembers + "/", "");
+					// false. Debe esperar a arrancar el barrir
+					getZk().getChildren(rootBarrierOperation,  barrierWatcher, s);
 
 				} catch (KeeperException e) {
 					System.out
@@ -145,10 +173,10 @@ public class ZookeeperObject implements Watcher{
 				try {
 					// Create the /members znode
 					// Create a folder, if it is not created
-					Stat s = getZk().exists(rootCounter, false);
+					Stat s = getZk().exists(rootOperation, false);
 					if (s == null) {
 						// Created the znode, if it is not created.
-						getZk().create(rootCounter, new byte[0],
+						getZk().create(rootOperation, new byte[0],
 								Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 					}
 				} catch (KeeperException e) {
@@ -159,7 +187,7 @@ public class ZookeeperObject implements Watcher{
 				}
 			}
 			try {
-				getZk().getChildren(rootCounter,  false, null);
+				getZk().getChildren(rootOperation,  false, null);
 			} catch (KeeperException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -167,7 +195,7 @@ public class ZookeeperObject implements Watcher{
 			}
 			operate = new Operate(getZk());
 			try {
-				getZk().getChildren(rootCounter,  counterWatcher, null);
+				getZk().getChildren(rootOperation,  counterOperation, null);
 			} catch (KeeperException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -180,7 +208,7 @@ public class ZookeeperObject implements Watcher{
 		pm.start();
 		ProcessBarrier bm = new ProcessBarrier(getZk(), barrierWatcher, mutexBarrier);
 		bm.start();
-		ProcessOperation cm = new ProcessOperation(getZk(), counterWatcher, mutexOperate, mutexBarrier, operate);
+		ProcessOperation cm = new ProcessOperation(getZk(), counterOperation, mutexOperate, mutexBarrier, operate);
 		cm.start();
 		
 		synchronized (mutexMember) {
@@ -313,7 +341,7 @@ public class ZookeeperObject implements Watcher{
 		}
 	};
 	
-	Watcher counterWatcher = new Watcher() {
+	Watcher counterOperation = new Watcher() {
 		public void process(WatchedEvent event) { 
 
 			Stat s = null;
@@ -336,8 +364,8 @@ public class ZookeeperObject implements Watcher{
 						mutexMember.notifyAll();
 					}
 				}
-				else if (event.getPath().equals(rootCounter)) {
-					listMembers = getZk().getChildren(rootCounter, false, s);
+				else if (event.getPath().equals(rootOperation)) {
+					listMembers = getZk().getChildren(rootOperation, false, s);
 					synchronized (mutexOperate) {
 						mutexOperate.notifyAll();
 					}

@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,12 +16,10 @@ import org.apache.zookeeper.data.Stat;
 import es.upm.dit.cnvr.model.BankClient;
 import es.upm.dit.cnvr.model.ClientDB;
 import es.upm.dit.cnvr.model.OperationEnum;
-import es.upm.dit.cnvr.model.ServiceStatus;
 import es.upm.dit.cnvr.model.Transaction;
 
 public class ProcessOperation extends Thread{
 
-	private List<String> listCounterP = null;
 	private String rootOperation = "/operation";
 	private String rootMember = "/members";
 	private ZooKeeper zk; 
@@ -43,10 +40,6 @@ public class ProcessOperation extends Thread{
 		this.mutexBarrier = mutexBarrier;
 	}
 
-	public byte[] createByte(OperationEnum operation){
-		byte[] data = operation.toString().getBytes(Charset.forName("UTF-8"));
-		return data;
-	}
 	public Transaction readData(byte[] data) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
 	    ObjectInputStream is = new ObjectInputStream(in);
@@ -64,8 +57,8 @@ public class ProcessOperation extends Thread{
 				synchronized (mutex) {
 					mutex.wait();
 				}
-			    List<String> listCounter = zk.getChildren(rootOperation,  false, null);
-				int size = listCounter.size();
+			    List<String> listOperation = zk.getChildren(rootOperation,  false, null);
+				int size = listOperation.size();
 			    List<String> listMembers = zk.getChildren(rootMember,  false, null);
 				Barrier b = new Barrier(zk, rootBarrier, listMembers.size(), mutexBarrier);
 				System.out.println("La lista del contador es " + size);
@@ -77,15 +70,15 @@ public class ProcessOperation extends Thread{
 					int numOp = size-operate.getPersonalCounter();
 					System.out.println("Tiene que hacer " + numOp + " cuentas");
 					try {
-						listCounter = zk.getChildren(rootOperation, false);
+						listOperation = zk.getChildren(rootOperation, false);
 					} catch (KeeperException | InterruptedException e) {
 						e.printStackTrace();
 					} 
-					Collections.sort(listCounter);
+					Collections.sort(listOperation);
 					for(int i=operate.getPersonalCounter(); i<size;i++){
 						byte[] op = new byte[0];
 						try {
-							op = zk.getData(rootOperation+"/" +listCounter.get(i),false, null);
+							op = zk.getData(rootOperation+"/" +listOperation.get(i),false, null);
 							//TODO: Cambiar esto por las mierdas verdaderas (Operaciones verdaderas)
 							transaction = readData(op);
 							bc = transaction.getBankClient();
@@ -99,43 +92,27 @@ public class ProcessOperation extends Thread{
 			                	db.deleteClient(bc.getAccount(),bc.getClientName());
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
 			                }
-			                if (readData(op).equals(OperationEnum.READ_CLIENT)){
-			                	if (bc.getAccount() != "0") {
-			                		bc = db.readAccount(bc.getAccount());
-			                    	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
-			                	}
-			                }
-
+			                
 			                if (readData(op).equals(OperationEnum.UPDATE_CLIENT)){
 			                	db.update(bc.getAccount(), bc.getBalance());
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1);
 			                }
 							
-//							if(readData(op).equals(OperationEnum.ADD.toString())){
-//								System.out.println("La cuenta es antes: " + operate.getZkCounter());
-//								operate.setZkCounter(operate.getZkCounter()+1);
-//								System.out.println("La cuenta es despues: " + operate.getZkCounter());
-//							}
-							//TODO: Y esto
-//							if(readData(op).equals(OperationEnum.REMOVE.toString())){
-//								operate.setZkCounter(operate.getZkCounter()-1);
-//							}
 						} catch (KeeperException | InterruptedException e) {
 							e.printStackTrace();
 						}
 						operate.setPersonalCounter(operate.getPersonalCounter()+1);
-						System.out.println("La operacion que tiene que realizar es: " + readData(op));
-						System.out.println("El valor del contador es zkCounter: " + operate.getZkCounter());
+						System.out.println("La operacion que tiene que realizar es: " + readData(op).getOperation().toString());
 					}
 					try {
-						listCounter = zk.getChildren(rootOperation,  true, null);
+						listOperation = zk.getChildren(rootOperation,  true, null);
 					} catch (KeeperException e) {
 						e.printStackTrace();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 
-				listCounterP = zk.getChildren(rootOperation, counterWatcherP, s);
+				zk.getChildren(rootOperation, counterWatcherP, s);
 				
 				System.out.println("Left counterbarrier");
 			}
