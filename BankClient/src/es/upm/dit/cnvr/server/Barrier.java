@@ -50,6 +50,7 @@ public class Barrier implements Watcher {
 					zk.create(root, new byte[0], Ids.OPEN_ACL_UNSAFE,
 							CreateMode.PERSISTENT);
 				}
+				
 			} catch (KeeperException e) {
 				System.out
 				.println("Keeper exception when instantiating queue: "
@@ -100,14 +101,25 @@ public class Barrier implements Watcher {
 			System.out.println(size);
 			System.out.println(list.size());
 
-			if (list.size() < size) {
+			if (list.size() < size && zk.exists(root+"leave", false) == null) {
 				synchronized (mutexBarrier) {
 					System.out.println("While antes del wait");
 					System.out.println("He hecho wait con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
-					mutexBarrier.wait();
+					mutexBarrier.wait(10000);
 					System.out.println("While tras el wait");
 				}
 			} else {
+				System.out.println("Va de puta madre 1");
+				Thread.sleep(new java.util.Random().nextInt(1) * 1000);
+				Stat t = null;
+				t = zk.exists(root+"leave", false);
+				System.out.println("*********************** PUTA T DE LA POLLA: "+t+" **************");
+				if (t == null) {
+					System.out.println("*********************** SE ESTA CREANDO EL PUTO LEAVE **************");
+					zk.create(root+"leave", new byte[0], Ids.OPEN_ACL_UNSAFE,
+							CreateMode.EPHEMERAL);
+				}
+				System.out.println("Va de puta madre 2");
 				return true;
 			}
 		}
@@ -133,6 +145,10 @@ public class Barrier implements Watcher {
 					mutexBarrier.wait();
 				}
 			} else {
+				Stat t = zk.exists(root+"leave", false);
+				if (t != null) {
+					zk.delete(root+"leave", 0);
+				}
 				return true;
 			}
 		}

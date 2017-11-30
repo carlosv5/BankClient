@@ -23,7 +23,7 @@ public class ProcessOperation extends Thread{
 	private String rootOperation = "/operation";
 	private String rootMember = "/members";
 	private ZooKeeper zk; 
-	private Watcher counterWatcherP;
+	private Watcher operationWatcherP;
 	private Integer mutex;
 	private Operate operate;
 	private Integer mutexBarrier;
@@ -32,9 +32,9 @@ public class ProcessOperation extends Thread{
 	private Transaction transaction;
 	private BankClient bc;
 
-	public ProcessOperation(ZooKeeper zk, Watcher counterWatcherP, Integer mutex, Integer mutexBarrier, Operate operate) {
+	public ProcessOperation(ZooKeeper zk, Watcher operationWatcherP, Integer mutex, Integer mutexBarrier, Operate operate) {
 		this.zk = zk;
-		this.counterWatcherP = counterWatcherP;
+		this.operationWatcherP = operationWatcherP;
 		this.mutex = mutex;	
 		this.operate = operate;
 		this.mutexBarrier = mutexBarrier;
@@ -55,7 +55,9 @@ public class ProcessOperation extends Thread{
 		while (true) {
 			try {
 				synchronized (mutex) {
+					System.out.println("PUTO WAIT DE LOS COJONES");
 					mutex.wait();
+					System.out.println("SALE DEL PUTO WAIT DE LOS COJONES");
 				}
 			    List<String> listOperation = zk.getChildren(rootOperation,  false, null);
 				int size = listOperation.size();
@@ -63,6 +65,7 @@ public class ProcessOperation extends Thread{
 				Barrier b = new Barrier(zk, rootBarrier, listMembers.size(), mutexBarrier);
 				System.out.println("La lista del contador es " + size);
 				//WATCHER Habría que hacerlo en el watcher
+				zk.getChildren(rootOperation, operationWatcherP, s);
 				b.enter();
 				if (operate.getPersonalCounter() < size){
 					System.out.println("DESACTUALIZADO");
@@ -111,16 +114,14 @@ public class ProcessOperation extends Thread{
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-
-				zk.getChildren(rootOperation, counterWatcherP, s);
-				
+	
 				System.out.println("Left counterbarrier");
-			}
+			}			
 				b.leave();
 				synchronized(ZookeeperObject.getMutexOperate()){
 					ZookeeperObject.getMutexOperate().notify();
 				}
-				
+				zk.getChildren(rootOperation, operationWatcherP, s);
 		}  catch (Exception e) {
 			System.out.println("Unexpected Exception process member");
 			break;

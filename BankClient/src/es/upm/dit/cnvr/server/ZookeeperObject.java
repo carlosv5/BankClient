@@ -195,7 +195,7 @@ public class ZookeeperObject implements Watcher{
 			}
 			operate = new Operate(getZk());
 			try {
-				getZk().getChildren(rootOperation,  counterOperation, null);
+				getZk().getChildren(rootOperation,  operationWatcher, null);
 			} catch (KeeperException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -208,7 +208,7 @@ public class ZookeeperObject implements Watcher{
 		pm.start();
 		ProcessBarrier bm = new ProcessBarrier(getZk(), barrierWatcher, mutexBarrier);
 		bm.start();
-		ProcessOperation cm = new ProcessOperation(getZk(), counterOperation, mutexOperate, mutexBarrier, operate);
+		ProcessOperation cm = new ProcessOperation(getZk(), operationWatcher, mutexOperate, mutexBarrier, operate);
 		cm.start();
 		
 		synchronized (mutexMember) {
@@ -341,7 +341,7 @@ public class ZookeeperObject implements Watcher{
 		}
 	};
 	
-	Watcher counterOperation = new Watcher() {
+	Watcher operationWatcher = new Watcher() {
 		public void process(WatchedEvent event) { 
 
 			Stat s = null;
