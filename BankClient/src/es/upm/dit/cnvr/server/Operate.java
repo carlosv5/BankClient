@@ -23,6 +23,8 @@ import es.upm.dit.cnvr.model.Transaction;
 
 // This class only create the znodes, it doesn't do any operation actually.
 
+//TODO: Plantear con bloqueo para que no se cree una operacion si ya se esta haciendo una
+
 public class Operate{
 
 	private ZooKeeper zk;
@@ -44,6 +46,9 @@ public class Operate{
 	public Transaction readData(byte[] data) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
 	    ObjectInputStream is = new ObjectInputStream(in);
+	    if(es.upm.dit.cnvr.client.ClientApp.debug){
+	    	System.out.println("Debug operation (Operate.java): Se esta creando el objeto transaction:" + ((Transaction) is.readObject()).toString());
+	    }
 	    return (Transaction) is.readObject();
 		
 //		String string = new String(data, StandardCharsets.UTF_8);

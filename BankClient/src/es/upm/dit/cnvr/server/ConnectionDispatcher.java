@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Random;
 
+import org.apache.zookeeper.ZooKeeper;
+
 import es.upm.dit.cnvr.model.BankClient;
 import es.upm.dit.cnvr.model.ClientDB;
 import es.upm.dit.cnvr.model.OperationEnum;
@@ -23,19 +25,23 @@ public class ConnectionDispatcher extends Thread {
     private DataOutputStream outToClient;
     private ClientDB db;
     private int id;
-    private ZookeeperObject zk;
+    private ZookeeperObject zkobject;
 	private Operate operate;
+	private ZooKeeper zk = ZookeeperObject.getZk();
+	private static String rootBarrier = "/boperation";
+
+
 
     /**
      * Constructor
      * @param id The identifier of the connection
      * @param connection The connection handle for sending a message to the client
      */
-    public ConnectionDispatcher(Socket connection, int id, ClientDB db, ZookeeperObject zk, Operate operate) {
+    public ConnectionDispatcher(Socket connection, int id, ClientDB db, ZookeeperObject zkobject, Operate operate) {
         this.connection = connection;
         this.id         = id;
         this.db			= db;
-        this.zk			= zk;
+        this.zkobject	= zkobject;
         this.operate	= operate;
     }
 
@@ -50,8 +56,12 @@ public class ConnectionDispatcher extends Thread {
             inFromClient = new ObjectInputStream(connection.getInputStream());
 
             while (true) {
+            	if (zk.getChildren(rootBarrier, false).size() > 0){
+            		synchronized(ZookeeperObject.getMutexOperate()){
+            			ZookeeperObject.getMutexOperate().wait();
+            		}
+            	}
                 transaction = (Transaction) inFromClient.readObject();
-                // TODO: Hace falta de alguna forma pasar el BankClient al ProcessOperator, o meterlo en los znodes... Quiza meter transactions en vez de operaciones?
                 BankClient bc = transaction.getBankClient();                
                 //TODO: Deberiamos meter comprobaciones para que si la operacion no la realiza bien que no cree los nodos de operaciones
                 if (transaction.getOperation().equals(OperationEnum.CREATE_CLIENT)){
@@ -69,19 +79,16 @@ public class ConnectionDispatcher extends Thread {
                 	operate.operation(transaction);
                 	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 }
+                //TODO: Quitar en ProcessOperation, no es necesario
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
                 	if (bc.getAccount() != "0") {
                 		bc = db.readAccount(bc.getAccount());
                 		transaction.setBankClient(bc);
                 		transaction.setStatus(ServiceStatus.OK);
-                    	operate.operation(transaction);
-                    	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
                 	}
                 	status = ServiceStatus.OK;
                 }
-                if (transaction.getOperation().equals(OperationEnum.UPDATE_BANK)){
-                	//TODO: Ni puta de que hay que hacer aqui - Yo creo que este metodo era para pasar el estado de la base de datos, pero eso no lo vamos a hacer
-                }
+                
                 if (transaction.getOperation().equals(OperationEnum.UPDATE_CLIENT)){
                 	status = db.update(bc.getAccount(), bc.getBalance());
                 	transaction.setStatus(status);

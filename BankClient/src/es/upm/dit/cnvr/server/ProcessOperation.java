@@ -73,13 +73,12 @@ public class ProcessOperation extends Thread{
 				b.enter();
 				if (operate.getPersonalCounter() < size){
 					System.out.println("DESACTUALIZADO");
-					///XXX: Voy a cambiar de posición b.enter y b.leave de dentro del if afuera porque va a ser necesario que la operacion primera la haga en otro lado, y entonces estara al dia y no entrara a la barrera bloqueando a los demas
+					///XXX: Voy a cambiar de posicion b.enter y b.leave de dentro del if afuera porque va a ser necesario que la operacion primera la haga en otro lado, y entonces estara al dia y no entrara a la barrera bloqueando a los demas
 					int numOp = size-operate.getPersonalCounter();
 					System.out.println("Tiene que hacer " + numOp + " cuentas");
 					try {
 						listCounter = zk.getChildren(rootOperation, false);
 					} catch (KeeperException | InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
 					Collections.sort(listCounter);
@@ -106,8 +105,7 @@ public class ProcessOperation extends Thread{
 			                    	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
 			                	}
 			                }
-			                if (readData(op).equals(OperationEnum.UPDATE_BANK)){
-			                }
+
 			                if (readData(op).equals(OperationEnum.UPDATE_CLIENT)){
 			                	db.update(bc.getAccount(), bc.getBalance());
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1);
@@ -132,10 +130,8 @@ public class ProcessOperation extends Thread{
 					try {
 						listCounter = zk.getChildren(rootOperation,  true, null);
 					} catch (KeeperException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
@@ -144,6 +140,10 @@ public class ProcessOperation extends Thread{
 				System.out.println("Left counterbarrier");
 			}
 				b.leave();
+				synchronized(ZookeeperObject.getMutexOperate()){
+					ZookeeperObject.getMutexOperate().notify();
+				}
+				
 		}  catch (Exception e) {
 			System.out.println("Unexpected Exception process member");
 			break;

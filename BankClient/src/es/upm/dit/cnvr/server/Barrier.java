@@ -38,7 +38,6 @@ public class Barrier implements Watcher {
 
 	public Barrier(ZooKeeper zk, String root, int size, Integer mutexBarrier) {
 		this.zk = zk;
-
 		this.root = root;
 		this.size = size;
 		this.mutexBarrier = mutexBarrier;

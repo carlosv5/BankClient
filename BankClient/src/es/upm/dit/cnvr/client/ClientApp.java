@@ -12,7 +12,6 @@ public class ClientApp {
 	public static boolean debug = true;
     
 	public ClientApp() {
-		// TODO Auto-generated constructor stub
 	}
 
 	

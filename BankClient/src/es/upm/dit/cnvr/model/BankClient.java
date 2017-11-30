@@ -15,8 +15,6 @@ public class BankClient implements Serializable {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public String getAccount() {

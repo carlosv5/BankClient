@@ -8,7 +8,6 @@ public class Transaction implements Serializable {
 	private ServiceStatus status;
 
 	public Transaction(OperationEnum op, BankClient bc) {
-		// TODO Auto-generated constructor stub
 		this.operation = op;
 		this.bankClient = bc;
 	}

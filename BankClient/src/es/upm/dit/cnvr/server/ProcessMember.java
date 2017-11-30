@@ -66,7 +66,6 @@ public class ProcessMember extends Thread{
 	}
 
 	public void printListMembers(List<String> list) {
-		System.out.println("----------------------EL EUROMILLONES----------------------------");
 		leaderElection(list);
 		System.out.println("Remaining # members:" + list.size());
 		System.out.print("The active members are: ");

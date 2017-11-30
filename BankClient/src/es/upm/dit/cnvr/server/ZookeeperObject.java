@@ -27,7 +27,6 @@ public class ZookeeperObject implements Watcher{
 	private static String aMember = "/member-";
 	private static int nMembers  = 0;
 	private static int nBarriers = 0;
-	private static List<String> listBarriers = null;
 	private static List<String> listMembers  = null;
 	private String leader = "";
 
@@ -41,13 +40,18 @@ public class ZookeeperObject implements Watcher{
 	private String myId = null;
 	
 	private String rootCounter = "/counter";
-	private static int personalCounter = 0;
-	private static int zkCounter = 0;
-	private List<String> listCounter = null;
 	private static Operate operate;
 
 	public ZookeeperObject() { 
 
+	}
+
+	public static Integer getMutexOperate() {
+		return mutexOperate;
+	}
+
+	public static Integer getMutexBarrier() {
+		return mutexBarrier;
 	}
 
 	public void configure() {	
@@ -63,8 +67,8 @@ public class ZookeeperObject implements Watcher{
 		// Create a session and wait until it is created.
 		// When is created, the watcher is notified
 		try {
-			if (zk == null) {
-				zk = new ZooKeeper(hosts[i], SESSION_TIMEOUT, this);
+			if (getZk() == null) {
+				setZk(new ZooKeeper(hosts[i], SESSION_TIMEOUT, this));
 				// We initialize the mutex Integer just after creating ZK.
 				try {
 					// Wait for creating the session. Use the object lock
@@ -73,7 +77,6 @@ public class ZookeeperObject implements Watcher{
 					}
 					//zk.exists("/", false);
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			}
 		} catch (Exception e) {
@@ -82,18 +85,18 @@ public class ZookeeperObject implements Watcher{
 
 		// Add the process to the members in zookeeper
 
-		if (zk != null) {
+		if (getZk() != null) {
 			// Create a folder for members and include this process/server
 			try {
 				// Create the /members znode
 				// Create a folder, if it is not created
-				Stat s = zk.exists(rootMembers, false);
+				Stat s = getZk().exists(rootMembers, false);
 				if (s == null) {
 					// Created the znode, if it is not created.
-					zk.create(rootMembers, new byte[0],
+					getZk().create(rootMembers, new byte[0],
 							Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 				}
-				myId = zk.create(rootMembers + aMember, new byte[0], Ids.OPEN_ACL_UNSAFE,
+				myId = getZk().create(rootMembers + aMember, new byte[0], Ids.OPEN_ACL_UNSAFE,
 						CreateMode.EPHEMERAL_SEQUENTIAL);
 				myId = myId.replace(rootMembers + "/", "");
 				System.out.println("Created znode nember id:" + myId);
@@ -102,7 +105,7 @@ public class ZookeeperObject implements Watcher{
 				//		Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
 				//myId = myId.replace(rootMembers + "/", "");
 				// false. Debe esperar a arrancar el barrir
-				listMembers = zk.getChildren(rootMembers,  memberWatcher, s);
+				listMembers = getZk().getChildren(rootMembers,  memberWatcher, s);
 				printListMembers(listMembers);
 				//System.out.println("Created znode nember id:"+ myId );
 
@@ -115,19 +118,19 @@ public class ZookeeperObject implements Watcher{
 			}
 
 			// Create the /b1 znode
-			if (zk != null) {
+			if (getZk() != null) {
 				try {
-					Stat s = zk.exists(rootBarrier, false);
+					Stat s = getZk().exists(rootBarrier, false);
 					if (s == null) {
-						zk.create(rootBarrier, new byte[0], Ids.OPEN_ACL_UNSAFE,
+						getZk().create(rootBarrier, new byte[0], Ids.OPEN_ACL_UNSAFE,
 								CreateMode.PERSISTENT);
 					}
 
-					zk.create(rootBarrier, new byte[0],
+					getZk().create(rootBarrier, new byte[0],
 							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
 					//myId = myId.replace(rootMembers + "/", "");
 					// false. Debe esperar a arrancar el barrir
-					listBarriers = zk.getChildren(rootBarrier,  barrierWatcher, s);
+					getZk().getChildren(rootBarrier,  barrierWatcher, s);
 
 				} catch (KeeperException e) {
 					System.out
@@ -137,15 +140,15 @@ public class ZookeeperObject implements Watcher{
 					System.out.println("Interrupted exception");
 				}
 			}
-			if (zk != null) {
+			if (getZk() != null) {
 				// Create a folder for members and include this process/server
 				try {
 					// Create the /members znode
 					// Create a folder, if it is not created
-					Stat s = zk.exists(rootCounter, false);
+					Stat s = getZk().exists(rootCounter, false);
 					if (s == null) {
 						// Created the znode, if it is not created.
-						zk.create(rootCounter, new byte[0],
+						getZk().create(rootCounter, new byte[0],
 								Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 					}
 				} catch (KeeperException e) {
@@ -156,15 +159,15 @@ public class ZookeeperObject implements Watcher{
 				}
 			}
 			try {
-				listCounter = zk.getChildren(rootCounter,  false, null);
+				getZk().getChildren(rootCounter,  false, null);
 			} catch (KeeperException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			operate = new Operate(zk);
+			operate = new Operate(getZk());
 			try {
-				listCounter = zk.getChildren(rootCounter,  counterWatcher, null);
+				getZk().getChildren(rootCounter,  counterWatcher, null);
 			} catch (KeeperException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -173,11 +176,11 @@ public class ZookeeperObject implements Watcher{
 		}
 
 		// Create threads
-		ProcessMember pm = new ProcessMember(zk, memberWatcher, mutexMember, myId, mutexBarrier);
+		ProcessMember pm = new ProcessMember(getZk(), memberWatcher, mutexMember, myId, mutexBarrier);
 		pm.start();
-		ProcessBarrier bm = new ProcessBarrier(zk, barrierWatcher, mutexBarrier);
+		ProcessBarrier bm = new ProcessBarrier(getZk(), barrierWatcher, mutexBarrier);
 		bm.start();
-		ProcessOperation cm = new ProcessOperation(zk, counterWatcher, mutexOperate, mutexBarrier, operate);
+		ProcessOperation cm = new ProcessOperation(getZk(), counterWatcher, mutexOperate, mutexBarrier, operate);
 		cm.start();
 		
 		synchronized (mutexMember) {
@@ -225,6 +228,14 @@ public class ZookeeperObject implements Watcher{
 		}
 	}	
 
+	public static ZooKeeper getZk() {
+		return zk;
+	}
+
+	public static void setZk(ZooKeeper zk) {
+		ZookeeperObject.zk = zk;
+	}
+
 	Watcher memberWatcher = new Watcher() {
 		public void process(WatchedEvent event) { 
 
@@ -241,7 +252,7 @@ public class ZookeeperObject implements Watcher{
 					}
 				}
 				else if (event.getPath().equals(rootMembers)) {
-					listMembers = zk.getChildren(rootMembers, false, s);
+					listMembers = getZk().getChildren(rootMembers, false, s);
 					synchronized (mutexMember) {
 						nMembers ++;
 						System.out.println("MW Members: " + nMembers);
@@ -318,7 +329,7 @@ public class ZookeeperObject implements Watcher{
 					}
 				}
 				else if (event.getPath().equals(rootMembers)) {
-					listMembers = zk.getChildren(rootMembers, false, s);
+					listMembers = getZk().getChildren(rootMembers, false, s);
 					synchronized (mutexMember) {
 						nMembers ++;
 						System.out.println("MW Members: " + nMembers);
@@ -326,7 +337,7 @@ public class ZookeeperObject implements Watcher{
 					}
 				}
 				else if (event.getPath().equals(rootCounter)) {
-					listMembers = zk.getChildren(rootCounter, false, s);
+					listMembers = getZk().getChildren(rootCounter, false, s);
 					synchronized (mutexOperate) {
 						mutexOperate.notifyAll();
 					}
