@@ -19,7 +19,7 @@ import org.apache.zookeeper.data.Stat;
 import es.upm.dit.cnvr.model.OperationEnum;
 
 
-public class Zookeeper implements Watcher{
+public class ZookeeperObject implements Watcher{
 
 	private static ZooKeeper zk = null;
 	private static String rootMembers = "/members";
@@ -46,7 +46,7 @@ public class Zookeeper implements Watcher{
 	private List<String> listCounter = null;
 	private static Operate operate;
 
-	public Zookeeper() { 
+	public ZookeeperObject() { 
 
 	}
 

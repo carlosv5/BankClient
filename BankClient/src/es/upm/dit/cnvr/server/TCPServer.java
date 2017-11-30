@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import es.upm.dit.cnvr.model.ClientDB;
-import es.upm.dit.cnvr.server.Zookeeper;
+import es.upm.dit.cnvr.server.ZookeeperObject;
 
 
 public class TCPServer {
@@ -14,9 +14,9 @@ public class TCPServer {
         Socket connectionSocket;
         int id = 0;
         ClientDB db = ClientDB.getInstance();
-        Zookeeper zk = new Zookeeper();
-        zk.configure();
-        Operate operate = zk.getOperate();
+        ZookeeperObject zkobject = new ZookeeperObject();
+        zkobject.configure();
+        Operate operate = zkobject.getOperate();
 
         ServerSocket welcomeSocket = new ServerSocket(6789);
         
@@ -24,7 +24,7 @@ public class TCPServer {
         while (true) {
             try {
                 connectionSocket = welcomeSocket.accept();
-                ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id, db, zk, operate);
+                ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id, db, zkobject, operate);
                 System.out.println("Get a socket connection");
                 conHandler.start();
                 id++;

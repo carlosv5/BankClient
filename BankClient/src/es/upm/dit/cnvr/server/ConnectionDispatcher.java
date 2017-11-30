@@ -23,7 +23,7 @@ public class ConnectionDispatcher extends Thread {
     private DataOutputStream outToClient;
     private ClientDB db;
     private int id;
-    private Zookeeper zk;
+    private ZookeeperObject zk;
 	private Operate operate;
 
     /**
@@ -31,7 +31,7 @@ public class ConnectionDispatcher extends Thread {
      * @param id The identifier of the connection
      * @param connection The connection handle for sending a message to the client
      */
-    public ConnectionDispatcher(Socket connection, int id, ClientDB db, Zookeeper zk, Operate operate) {
+    public ConnectionDispatcher(Socket connection, int id, ClientDB db, ZookeeperObject zk, Operate operate) {
         this.connection = connection;
         this.id         = id;
         this.db			= db;
