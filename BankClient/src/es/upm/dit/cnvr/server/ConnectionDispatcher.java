@@ -137,6 +137,7 @@ public class ConnectionDispatcher extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("FIN CONNECTION DISPATCHER");
     }
     //TODO Change in the method put of HashMap -> <String, BankClient>
     private static String generateId(int bloqDigits){

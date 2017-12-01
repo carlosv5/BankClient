@@ -51,15 +51,16 @@ public class ProcessOperation extends Thread{
 	//TODO: Esto todavia no se ha mirado.
 	@Override
 	public void run() {
+		System.out.println("¡¡¡¡Empiezo el run en ProcessOperation.java!!!!");
 		Stat s = null;
 		while (true) {
 			try {
 				synchronized (mutex) {
-					System.out.println("PUTO WAIT DE LOS COJONES");
 					System.out.println("He hecho wait con el mutexOperate (en ProcessOperation.java): " + System.identityHashCode(mutex));
 					mutex.wait();
-					System.out.println("SALE DEL PUTO WAIT DE LOS COJONES");
+					System.out.println("SALE DEL wait con el mutexOperate (en ProcessOperation.java)");
 				}
+				System.out.println("¡¡¡¡Empiezo el *WHILE* en ProcessOperation.java!!!!");
 			    List<String> listOperation = zk.getChildren(rootOperation,  false, null);
 				int size = listOperation.size();
 			    List<String> listMembers = zk.getChildren(rootMember,  false, null);
@@ -68,6 +69,9 @@ public class ProcessOperation extends Thread{
 				//WATCHER Habría que hacerlo en el watcher
 				zk.getChildren(rootOperation, operationWatcherP, s);
 				b.enter();
+				System.out.println("EN MEDIO DEL ENTER Y EL LEAVE");
+				System.out.println("operate.getPersonalCounter(): "+operate.getPersonalCounter());
+				System.out.println("size: "+size);
 				if (operate.getPersonalCounter() < size){
 					System.out.println("DESACTUALIZADO");
 					///XXX: Voy a cambiar de posicion b.enter y b.leave de dentro del if afuera porque va a ser necesario que la operacion primera la haga en otro lado, y entonces estara al dia y no entrara a la barrera bloqueando a los demas
@@ -105,7 +109,7 @@ public class ProcessOperation extends Thread{
 						} catch (KeeperException | InterruptedException e) {
 							e.printStackTrace();
 						}
-						operate.setPersonalCounter(operate.getPersonalCounter()+1);
+						//operate.setPersonalCounter(operate.getPersonalCounter()+1);
 						System.out.println("La operacion que tiene que realizar es: " + readData(op).getOperation().toString());
 					}
 					try {
@@ -119,12 +123,12 @@ public class ProcessOperation extends Thread{
 				System.out.println("Left counterbarrier");
 			}			
 				b.leave();
-				synchronized(ZookeeperObject.getMutexOperate()){
-					ZookeeperObject.getMutexOperate().notify();
-				}
+//				synchronized(ZookeeperObject.getMutexOperate()){
+//					ZookeeperObject.getMutexOperate().notify();
+//				}
 				zk.getChildren(rootOperation, operationWatcherP, s);
 		}  catch (Exception e) {
-			System.out.println("Unexpected Exception process member");
+			System.out.println("Unexpected Exception process member"+e.toString());
 			break;
 		}
 		}

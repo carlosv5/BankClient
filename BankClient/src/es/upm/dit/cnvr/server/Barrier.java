@@ -100,26 +100,23 @@ public class Barrier implements Watcher {
 			List<String> list = zk.getChildren(root, true);
 			System.out.println(size);
 			System.out.println(list.size());
+			List<String> boperationList = zk.getChildren(root+"leave", true);
 
-			if (list.size() < size && zk.exists(root+"leave", false) == null) {
+			if (list.size() < size && boperationList.size()>0) {
 				synchronized (mutexBarrier) {
-					System.out.println("While antes del wait");
+					System.out.println("While antes del wait barrier.java");
 					System.out.println("He hecho wait con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
-					mutexBarrier.wait(10000);
-					System.out.println("While tras el wait");
+					mutexBarrier.wait(1000);
+					System.out.println("While tras el wait barrier.java");
 				}
 			} else {
-				System.out.println("Va de puta madre 1");
-				Thread.sleep(new java.util.Random().nextInt(1) * 1000);
-				Stat t = null;
-				t = zk.exists(root+"leave", false);
-				System.out.println("*********************** PUTA T DE LA POLLA: "+t+" **************");
-				if (t == null) {
-					System.out.println("*********************** SE ESTA CREANDO EL PUTO LEAVE **************");
-					zk.create(root+"leave", new byte[0], Ids.OPEN_ACL_UNSAFE,
+				Thread.sleep(new java.util.Random().nextInt(1) * 7000);
+				System.out.println("ESTADO T: " + boperationList.size());
+				if (boperationList.size()==0) {
+					System.out.println("*********************** SE ESTA CREANDO EL NODO LEAVE **************");
+					zk.create(root+"leave/nodo", new byte[0], Ids.OPEN_ACL_UNSAFE,
 							CreateMode.EPHEMERAL);
 				}
-				System.out.println("Va de puta madre 2");
 				return true;
 			}
 		}
@@ -135,19 +132,18 @@ public class Barrier implements Watcher {
 
 	boolean leave() throws KeeperException, InterruptedException{
 		System.out.println("Start leave barrier");
-		Thread.sleep(1000);
 		zk.delete(nodoB, 0);
 		System.out.println("He borrado el nodoB: " + nodoB);
+		List<String> boperationList = zk.getChildren(root+"leave", true);
 		while (true) {
 			List<String> list = zk.getChildren(root, true);
 			if (list.size() > 0) {
 				synchronized (mutexBarrier) {
-					mutexBarrier.wait();
+					mutexBarrier.wait(1000);
 				}
 			} else {
-				Stat t = zk.exists(root+"leave", false);
-				if (t != null) {
-					zk.delete(root+"leave", 0);
+				if (boperationList.size()>0) {
+					zk.delete(root+"leave/nodo", 0);
 				}
 				return true;
 			}

@@ -23,13 +23,11 @@ public class ZookeeperObject implements Watcher{
 
 	private static ZooKeeper zk = null;
 	private static String rootMembers = "/members";
-	private static String rootBarrier = "/b1";
-	private static String rootBarrierOperation = "/boperation";
+	private static String rootBarrier = "/boperation";
 	private static String aMember = "/member-";
 	private static int nMembers  = 0;
 	private static int nBarriers = 0;
 	private static List<String> listMembers  = null;
-	private String leader = "";
 
 
 	private static Integer mutex        = -1;
@@ -62,7 +60,7 @@ public class ZookeeperObject implements Watcher{
 	public void configure() {	
 		System.out.println("START CONFIGURE");
 		// This is static. A list of zookeeper can be provided for decide where to connect
-		String[] hosts = {"138.4.31.99:2181", "138.4.31.98:2182"};
+		String[] hosts = {"138.4.31.99:2181", "138.4.31.117:2182"};
 
 		// Select a random zookeeper server
 		Random rand = new Random();
@@ -122,12 +120,17 @@ public class ZookeeperObject implements Watcher{
 				System.out.println("InterruptedException raised");
 			}
 
-			// Create the /b1 znode
+			// Create the /boperation znode
 			if (getZk() != null) {
 				try {
 					Stat s = getZk().exists(rootBarrier, false);
 					if (s == null) {
 						getZk().create(rootBarrier, new byte[0], Ids.OPEN_ACL_UNSAFE,
+								CreateMode.PERSISTENT);
+					}
+					Stat sp = getZk().exists("/boperationleave", false);
+					if (sp == null) {
+						getZk().create("/boperationleave", new byte[0], Ids.OPEN_ACL_UNSAFE,
 								CreateMode.PERSISTENT);
 					}
 
@@ -136,29 +139,6 @@ public class ZookeeperObject implements Watcher{
 					//myId = myId.replace(rootMembers + "/", "");
 					// false. Debe esperar a arrancar el barrir
 					getZk().getChildren(rootBarrier,  barrierWatcher, s);
-
-				} catch (KeeperException e) {
-					System.out
-					.println("Keeper exception when instantiating queue: "
-							+ e.toString());
-				} catch (InterruptedException e) {
-					System.out.println("Interrupted exception");
-				}
-			}
-			// Create the /b1 znode
-			if (getZk() != null) {
-				try {
-					Stat s = getZk().exists(rootBarrierOperation, false);
-					if (s == null) {
-						getZk().create(rootBarrierOperation, new byte[0], Ids.OPEN_ACL_UNSAFE,
-								CreateMode.PERSISTENT);
-					}
-
-//					getZk().create(rootBarrier, new byte[0],
-//							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
-					//myId = myId.replace(rootMembers + "/", "");
-					// false. Debe esperar a arrancar el barrir
-					getZk().getChildren(rootBarrierOperation,  barrierWatcher, s);
 
 				} catch (KeeperException e) {
 					System.out
@@ -204,7 +184,7 @@ public class ZookeeperObject implements Watcher{
 		}
 
 		// Create threads
-		ProcessMember pm = new ProcessMember(getZk(), memberWatcher, mutexMember, myId, mutexBarrier);
+		ProcessMember pm = new ProcessMember(getZk(), memberWatcher, mutexMember, myId);
 		pm.start();
 		ProcessBarrier bm = new ProcessBarrier(getZk(), barrierWatcher, mutexBarrier);
 		bm.start();
