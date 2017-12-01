@@ -52,7 +52,7 @@ public class ClientApp {
         	String accountId = "0";
         	String clientName = "";
         	Double balance = 0.0;
-		        switch (input_parts[0]) {
+		        switch (input_parts[0].toUpperCase()) {
 		            case "CREATE":
 		            	//Check options
 		            	if(input_parts[1] == null || input_parts[2] == null || input_parts.length > 3){
