@@ -100,19 +100,22 @@ public class Barrier implements Watcher {
 			List<String> list = zk.getChildren(root, true);
 			System.out.println(size);
 			System.out.println(list.size());
-			List<String> boperationList = zk.getChildren(root+"leave", true);
+			List<String> boperationList = null;
+			for(int i = 0; i<3; i++){
+			boperationList = zk.getChildren(root+"leave", true);
 			System.out.println("Enter");
 			System.out.println("La lista de "+ root+"leave"+" es: " + boperationList);
 			System.out.println("El size de boperationleave es: " + boperationList.size());
+			Thread.sleep(new java.util.Random().nextInt(1) * 1000);
+			}
 			if (list.size() < size && boperationList.size()>0) {
 				synchronized (mutexBarrier) {
 					System.out.println("While antes del wait barrier.java");
 					System.out.println("He hecho wait con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
-					mutexBarrier.wait(1000);
+					mutexBarrier.wait();
 					System.out.println("While tras el wait barrier.java");
 				}
 			} else {
-				Thread.sleep(new java.util.Random().nextInt(1) * 7000);
 				System.out.println("ESTADO T: " + boperationList.size());
 				if (boperationList.size()==0) {
 					System.out.println("*********************** SE ESTA CREANDO EL NODO LEAVE **************");
@@ -145,7 +148,7 @@ public class Barrier implements Watcher {
 			
 			if (list.size() > 0) {
 				synchronized (mutexBarrier) {
-					mutexBarrier.wait(1000);
+					mutexBarrier.wait();
 				}
 			} else {
 				if (boperationList.size()>0) {
