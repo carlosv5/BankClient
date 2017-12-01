@@ -86,17 +86,17 @@ public class ProcessOperation extends Thread{
 							transaction = readData(op);
 							bc = transaction.getBankClient();
 							
-							if (readData(op).equals(OperationEnum.CREATE_CLIENT)){
+							if (readData(op).getOperation().equals(OperationEnum.CREATE_CLIENT)){
 			                	db.createClient(bc);
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
 			                }
 			                
-			                if (readData(op).equals(OperationEnum.DELETE_CLIENT)){
+			                if (readData(op).getOperation().equals(OperationEnum.DELETE_CLIENT)){
 			                	db.deleteClient(bc.getAccount(),bc.getClientName());
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1); 	
 			                }
 			                
-			                if (readData(op).equals(OperationEnum.UPDATE_CLIENT)){
+			                if (readData(op).getOperation().equals(OperationEnum.UPDATE_CLIENT)){
 			                	db.update(bc.getAccount(), bc.getBalance());
 			                	operate.setPersonalCounter(operate.getPersonalCounter()+1);
 			                }
