@@ -101,14 +101,8 @@ public class Barrier implements Watcher {
 			System.out.println(size);
 			System.out.println(list.size());
 			List<String> boperationList = null;
-			for(int i = 0; i<3; i++){
 			boperationList = zk.getChildren(root+"leave", true);
-			System.out.println("Enter");
-			System.out.println("La lista de "+ root+"leave"+" es: " + boperationList);
-			System.out.println("El size de boperationleave es: " + boperationList.size());
-			Thread.sleep(new java.util.Random().nextInt(1) * 1000);
-			}
-			if (list.size() < size && boperationList.size()>0) {
+			if (list.size() < size && boperationList.size()==0) {
 				synchronized (mutexBarrier) {
 					System.out.println("While antes del wait barrier.java");
 					System.out.println("He hecho wait con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
@@ -117,6 +111,7 @@ public class Barrier implements Watcher {
 				}
 			} else {
 				System.out.println("ESTADO T: " + boperationList.size());
+				boperationList = zk.getChildren(root+"leave", true);
 				if (boperationList.size()==0) {
 					System.out.println("*********************** SE ESTA CREANDO EL NODO LEAVE **************");
 					zk.create(root+"leave/nodo", new byte[0], Ids.OPEN_ACL_UNSAFE,
@@ -152,6 +147,7 @@ public class Barrier implements Watcher {
 				}
 			} else {
 				if (boperationList.size()>0) {
+					System.out.println("DELETING AUXILIAR NODE");
 					zk.delete(root+"leave/nodo", 0);
 				}
 				return true;

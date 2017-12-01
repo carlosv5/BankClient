@@ -219,8 +219,8 @@ public class ZookeeperObject implements Watcher{
 	public void process(WatchedEvent event) {
 		Stat s = null;
 
-		System.out.println("------------------Watcher PROCESS ------------------");
-		System.out.println("Member: " + event.getType() + ", " + event.getPath());
+		//System.out.println("------------------Watcher PROCESS ------------------");
+		//System.out.println("Member: " + event.getType() + ", " + event.getPath());
 		try {
 			if (event.getPath() == null) {			
 				//if (event.getState() == Watcher.Event.KeeperState.SyncConnected) {
