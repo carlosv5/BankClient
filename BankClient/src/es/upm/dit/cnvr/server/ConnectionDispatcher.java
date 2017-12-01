@@ -60,8 +60,9 @@ public class ConnectionDispatcher extends Thread {
             	if (zk.getChildren(rootBarrierOperation, false).size() > 0){
 
             		synchronized(ZookeeperObject.getMutexOperate()){
-            			ZookeeperObject.getMutexOperate().wait();
-
+    					System.out.println("He hecho wait con el mutexOperate (en ConnectionDispatcher.java): " + System.identityHashCode(ZookeeperObject.getMutexOperate()));
+    					ZookeeperObject.getMutexOperate().wait();
+            			
             		}
             	}
 

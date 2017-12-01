@@ -368,6 +368,7 @@ public class ZookeeperObject implements Watcher{
 					listMembers = getZk().getChildren(rootOperation, false, s);
 					synchronized (mutexOperate) {
 						mutexOperate.notifyAll();
+						System.out.println("He hecho notify con el mutexOperate: " + System.identityHashCode(mutexBarrier));
 					}
 				}
 				else if (event.getPath().equals(rootBarrier)) {

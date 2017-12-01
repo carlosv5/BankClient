@@ -56,6 +56,7 @@ public class ProcessOperation extends Thread{
 			try {
 				synchronized (mutex) {
 					System.out.println("PUTO WAIT DE LOS COJONES");
+					System.out.println("He hecho wait con el mutexOperate (en ProcessOperation.java): " + System.identityHashCode(mutex));
 					mutex.wait();
 					System.out.println("SALE DEL PUTO WAIT DE LOS COJONES");
 				}
