@@ -101,7 +101,9 @@ public class Barrier implements Watcher {
 			System.out.println(size);
 			System.out.println(list.size());
 			List<String> boperationList = zk.getChildren(root+"leave", true);
-
+			System.out.println("Enter");
+			System.out.println("La lista de "+ root+"leave"+" es: " + boperationList);
+			System.out.println("El size de boperationleave es: " + boperationList.size());
 			if (list.size() < size && boperationList.size()>0) {
 				synchronized (mutexBarrier) {
 					System.out.println("While antes del wait barrier.java");
@@ -135,8 +137,12 @@ public class Barrier implements Watcher {
 		zk.delete(nodoB, 0);
 		System.out.println("He borrado el nodoB: " + nodoB);
 		List<String> boperationList = zk.getChildren(root+"leave", true);
+		System.out.println("Leave");
+		System.out.println("La lista de "+ root+"leave"+" es: " + boperationList);
+		System.out.println("El size de boperationleave es: " + boperationList.size());
 		while (true) {
 			List<String> list = zk.getChildren(root, true);
+			
 			if (list.size() > 0) {
 				synchronized (mutexBarrier) {
 					mutexBarrier.wait(1000);
