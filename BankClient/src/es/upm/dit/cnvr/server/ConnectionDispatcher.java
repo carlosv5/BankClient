@@ -70,7 +70,7 @@ public class ConnectionDispatcher extends Thread {
                 BankClient bc = transaction.getBankClient();                
                 //TODO: Deberiamos meter comprobaciones para que si la operacion no la realiza bien que no cree los nodos de operaciones
                 if (transaction.getOperation().equals(OperationEnum.CREATE_CLIENT)){
-                	bc.setAccount(generateId(2));
+                	bc.setAccount(generateId(5));
                 	status = db.createClient(bc);
                 	transaction.setBankClient(bc);
                 	transaction.setStatus(status);
