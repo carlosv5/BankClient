@@ -37,7 +37,7 @@ public class ClientApp {
 		System.out.println("|   - Usage: UPDATE [Account ID] [New Balance]       |");
 		System.out.println("|4. Delete a client account                          |");
 		//ClientName for security purposes
-		System.out.println("|   - Usage: DELETE [Account ID] [ClientName]        |");
+		System.out.println("|   - Usage: DELETE [Account ID] [Name and lastnames]|");
 		System.out.println("|5. Show these options again                         |");
 		System.out.println("|   - Usage: OPTIONS                                 |");
 		System.out.println("|----------------------------------------------------|");
@@ -93,14 +93,14 @@ public class ClientApp {
 		            	break;
 		            case "DELETE":
 		            	//Check options
-		            	if(input_parts[1] == null || input_parts[2] == null || input_parts.length > 3){
+		            	if(input_parts[1] == null || input_parts[2] == null || input_parts[3] == null|| input_parts[4] == null|| input_parts.length > 5){
 		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
 		            		break;
 		            	}
 		            	//Variables for method
 		            	op = OperationEnum.DELETE_CLIENT;
 		            	accountId = input_parts[1];
-		                clientName = input_parts[2];
+		                clientName = input_parts[2]+" "+input_parts[3]+" "+input_parts[4];
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);
 		                break;
