@@ -101,7 +101,8 @@ public class Barrier implements Watcher {
 			System.out.println(size);
 			System.out.println(list.size());
 			System.out.println("Cuantos somos en la barrera enter: " + list.size());
-			if (list.size() < size ) {
+			System.out.println("Condicion: " + zk.exists("/boperationleave", false)!= null);
+			if (list.size() < size && zk.exists("/boperationleave", false)== null) {
 				synchronized (mutexBarrier) {
 					System.out.println("While antes del wait barrier.java");
 					System.out.println("He hecho wait con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
@@ -130,10 +131,16 @@ public class Barrier implements Watcher {
 		while (true) {
 			List<String> list = zk.getChildren(root, true);
 			System.out.println("Cuantos somos en la barrera leave: " + list.size());
-			
+			Stat stat = zk.exists("/boperationleave", false);
+			System.out.println("STAT ES: " + stat);
 			if (list.size() > 0) {
 				synchronized (mutexBarrier) {
 					mutexBarrier.wait(1000);
+					if(stat == null){
+						zk.create("/boperationleave", new byte[0],
+								Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+						System.out.println("SOY EL PRIMERO Y ESTOY CREANDO EL NODO DE SALIDA");
+						}
 				}
 			} else {
 				System.out.println("Leave");

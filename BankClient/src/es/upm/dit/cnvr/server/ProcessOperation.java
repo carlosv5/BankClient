@@ -53,12 +53,27 @@ public class ProcessOperation extends Thread{
 	public void run() {
 		System.out.println("¡¡¡¡Empiezo el run en ProcessOperation.java!!!!");
 		Stat s = null;
+		
 		while (true) {
 			try {
 				synchronized (mutex) {
 					System.out.println("He hecho wait con el mutexOperate (en ProcessOperation.java): " + System.identityHashCode(mutex));
 					mutex.wait();
 					System.out.println("SALE DEL wait con el mutexOperate (en ProcessOperation.java)");
+				}
+				Stat stat = null;
+				try {
+					stat = zk.exists("/boperationleave", false);
+					System.out.println("STAT ES: " + stat);
+					if(stat != null){
+						zk.delete("/boperationleave", 0);
+					}
+				} catch (KeeperException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 				System.out.println("¡¡¡¡Empiezo el *WHILE* en ProcessOperation.java!!!!");
 			    List<String> listOperation = zk.getChildren(rootOperation,  false, null);
