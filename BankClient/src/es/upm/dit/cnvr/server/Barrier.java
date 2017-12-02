@@ -137,9 +137,14 @@ public class Barrier implements Watcher {
 				synchronized (mutexBarrier) {
 					mutexBarrier.wait(1000);
 					if(stat == null){
+						try{
 						zk.create("/boperationleave", new byte[0],
 								Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 						System.out.println("SOY EL PRIMERO Y ESTOY CREANDO EL NODO DE SALIDA");
+						} catch (Exception e1){
+							System.out.println("YA ESTABA CREADO, SEGUIMOS");
+
+						}
 						}
 				}
 			} else {
