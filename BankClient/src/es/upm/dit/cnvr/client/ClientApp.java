@@ -18,15 +18,15 @@ public class ClientApp {
 	public static void main(String[] args) { //throws Exception{
 		System.out.println("|****************************************************|");
 		System.out.println("|Welcome to the administration system of Eclipse Bank|");
-		System.out.println("|****************************************************|");
-		System.out.println("|**********||||||||************||||||||**************|");
-		System.out.println("|**********||******************||****|*|*************|");
-		System.out.println("|**********||******************||****|*|*************|");
-		System.out.println("|**********||||||||************||||||||**************|");
-		System.out.println("|**********||******************||****|*|*************|");
-		System.out.println("|**********||******************||****|*|*************|");
-		System.out.println("|**********||||||||************||||||||**************|");
-		System.out.println("|****************************************************|");
+		System.out.println("|*************************************************///|");
+		System.out.println("|           ||||||||            ||||||||         ////|");
+		System.out.println("|           ||                  ||    |||       /////|");
+		System.out.println("|           ||                  ||    |||      //////|");
+		System.out.println("|           ||||||||            ||||||||      ///////|");
+		System.out.println("|           ||                  ||    |||    ////////|");
+		System.out.println("|           ||                  ||    |||   /////////|");
+		System.out.println("|           ||||||||            ||||||||   //////////|");
+		System.out.println("|////////////////////////////////////////////////////|");
 
 		showOptions();		
 	}
