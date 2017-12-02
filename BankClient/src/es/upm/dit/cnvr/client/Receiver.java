@@ -37,13 +37,12 @@ public class Receiver extends Thread{
             try {
                 // 1. Create the Stream for the input
                 inFromServer =new ObjectInputStream(clientSocket.getInputStream());
-                String message;
                 // 2. Read from the connection
                 transaction = (Transaction) inFromServer.readObject();
                 BankClient bc = transaction.getBankClient();
                 ServiceStatus status = transaction.getStatus();
                 System.out.println("<< Connection: Account recieved.");
-                System.out.println("<< The status of the operation is: " + status);
+                //System.out.println("<< The status of the operation is: " + status);
                 if (bc == null) break;
                 
 		        switch (transaction.getOperation().toString()) {
@@ -74,7 +73,7 @@ public class Receiver extends Thread{
 		        if(status==ServiceStatus.OK){
 		        	System.out.println(">>Successful operation");
 		        } else{
-		        	System.out.println(">>Unsuccessful operation. Contact with the administrator");
+		        	System.out.println(">>Unsuccessful operation. Contact the administrator");
 		        }
 				System.out.println("|----------------------------------------------------|");
 				System.out.println("|Enter an operation                                  |");

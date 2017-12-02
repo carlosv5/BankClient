@@ -19,6 +19,15 @@ public class ClientApp {
 		System.out.println("|****************************************************|");
 		System.out.println("|Welcome to the administration system of Eclipse Bank|");
 		System.out.println("|****************************************************|");
+		System.out.println("|**********||||||||************||||||||**************|");
+		System.out.println("|**********||******************||****|*|*************|");
+		System.out.println("|**********||******************||****|*|*************|");
+		System.out.println("|**********||||||||************||||||||**************|");
+		System.out.println("|**********||******************||****|*|*************|");
+		System.out.println("|**********||******************||****|*|*************|");
+		System.out.println("|**********||||||||************||||||||**************|");
+		System.out.println("|****************************************************|");
+
 		showOptions();		
 	}
 	
@@ -128,7 +137,6 @@ public class ClientApp {
         	System.out.println("Account ID: " + accountId);
         	System.out.println("Client Name: " + clientName);
         	System.out.println("Balance: " + quantity);
-
         }
         BankClient bc = new BankClient(accountId, clientName, quantity); 
         Transaction transaction = new Transaction(operation,bc);

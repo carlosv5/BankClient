@@ -39,14 +39,6 @@ public class TCPClient {
         receiver.start();
 
         try {
-        	if(ClientApp.debug){
-            	System.out.println("Debug operation");
-                System.out.println("Transaction: the information fo the account to send is ");
-            	System.out.println("Operation: " + operation);
-            	System.out.println("Account ID: " + bc.getAccount());
-            	System.out.println("Client Name: " + bc.getClientName());
-            	System.out.println("Balance: " + bc.getBalance());        	
-            	}
              // 4. Write information to the connection
               outToServer.writeObject(transaction);
               outToServer.flush();
