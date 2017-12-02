@@ -40,12 +40,9 @@ public class ClientDB implements Serializable {
 		}else {
 			// It doesn't exists: We create it
 			clientDB.put(client.getAccount(), client);
-			if(es.upm.dit.cnvr.client.ClientApp.debug){
-				System.out.println("DB has: ");
-				System.out.println(clientDB.toString());
-			}
 			stat = ServiceStatus.OK;
 		}
+		System.out.println("DB: " + clientDB.toString());
 		return stat;
 	}
 
@@ -54,10 +51,7 @@ public class ClientDB implements Serializable {
 		BankClient client = null;
 		if (clientDB.containsKey(clientAccount)) 
 			client = clientDB.get(clientAccount);
-		if(es.upm.dit.cnvr.client.ClientApp.debug){
-			System.out.println("DB has: ");
-			System.out.println(clientDB.toString());
-		}
+		System.out.println("DB: " + clientDB.toString());
 		return client;
 	}
 	
@@ -71,10 +65,7 @@ public class ClientDB implements Serializable {
 			} else {
 				stat = ServiceStatus.INFORMATION_INVALID;
 			} 
-		if(es.upm.dit.cnvr.client.ClientApp.debug){
-			System.out.println("DB has: ");
-			System.out.println(clientDB.toString());
-		}
+		System.out.println("DB: " + clientDB.toString());
 		return stat;
 	}
 	
@@ -85,10 +76,6 @@ public class ClientDB implements Serializable {
 			stat = ServiceStatus.OK;	
 		} else {
 			stat = ServiceStatus.INFORMATION_INVALID;
-		}
-		if(es.upm.dit.cnvr.client.ClientApp.debug){
-			System.out.println("DB has: ");
-			System.out.println(clientDB.toString());
 		}
 		return stat;
 	}

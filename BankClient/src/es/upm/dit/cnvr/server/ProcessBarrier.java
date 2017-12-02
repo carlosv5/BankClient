@@ -35,7 +35,6 @@ public class ProcessBarrier  extends Thread {
 				synchronized (mutex) {
 					mutex.wait();
 				}
-				System.out.println("Recargando el watcher del barrier cuando ha saltado");
 				listBarriersP = zk.getChildren(rootBarrier, barrierWatcherP, s); 
 			} catch (Exception e) {
 				System.out.println("Unexpected Exception process barrier");

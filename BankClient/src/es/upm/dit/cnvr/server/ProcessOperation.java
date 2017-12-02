@@ -51,20 +51,16 @@ public class ProcessOperation extends Thread{
 	//TODO: Esto todavia no se ha mirado.
 	@Override
 	public void run() {
-		System.out.println("¡¡¡¡Empiezo el run en ProcessOperation.java!!!!");
 		Stat s = null;
 		
 		while (true) {
 			try {
 				synchronized (mutex) {
-					System.out.println("He hecho wait con el mutexOperate (en ProcessOperation.java): " + System.identityHashCode(mutex));
 					mutex.wait();
-					System.out.println("SALE DEL wait con el mutexOperate (en ProcessOperation.java)");
 				}
 				Stat stat = null;
 				try {
 					stat = zk.exists("/boperationleave", false);
-					System.out.println("STAT ES: " + stat);
 					if(stat != null){
 						zk.delete("/boperationleave", 0);
 					}
@@ -75,23 +71,17 @@ public class ProcessOperation extends Thread{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				System.out.println("¡¡¡¡Empiezo el *WHILE* en ProcessOperation.java!!!!");
 			    List<String> listOperation = zk.getChildren(rootOperation,  false, null);
 				int size = listOperation.size();
 			    List<String> listMembers = zk.getChildren(rootMember,  false, null);
 				Barrier b = new Barrier(zk, rootBarrier, listMembers.size(), mutexBarrier);
-				System.out.println("La lista del contador es " + size);
 				//WATCHER Habría que hacerlo en el watcher
 				zk.getChildren(rootOperation, operationWatcherP, s);
 				b.enter();
-				System.out.println("EN MEDIO DEL ENTER Y EL LEAVE");
-				System.out.println("operate.getPersonalCounter(): "+operate.getPersonalCounter());
-				System.out.println("size: "+size);
 				if (operate.getPersonalCounter() < size){
 					System.out.println("DESACTUALIZADO");
 					///XXX: Voy a cambiar de posicion b.enter y b.leave de dentro del if afuera porque va a ser necesario que la operacion primera la haga en otro lado, y entonces estara al dia y no entrara a la barrera bloqueando a los demas
 					int numOp = size-operate.getPersonalCounter();
-					System.out.println("Tiene que hacer " + numOp + " cuentas");
 					try {
 						listOperation = zk.getChildren(rootOperation, false);
 					} catch (KeeperException | InterruptedException e) {
@@ -102,7 +92,7 @@ public class ProcessOperation extends Thread{
 						byte[] op = new byte[0];
 						try {
 							op = zk.getData(rootOperation+"/" +listOperation.get(i),false, null);
-							//TODO: Cambiar esto por las mierdas verdaderas (Operaciones verdaderas)
+							//TODO: Cambiar esto por las  verdaderas (Operaciones verdaderas)
 							transaction = readData(op);
 							bc = transaction.getBankClient();
 							
@@ -125,7 +115,7 @@ public class ProcessOperation extends Thread{
 							e.printStackTrace();
 						}
 						//operate.setPersonalCounter(operate.getPersonalCounter()+1);
-						System.out.println("La operacion que tiene que realizar es: " + readData(op).getOperation().toString());
+						System.out.println("The operation to do is: " + readData(op).getOperation().toString());
 					}
 					try {
 						listOperation = zk.getChildren(rootOperation,  true, null);
@@ -134,7 +124,7 @@ public class ProcessOperation extends Thread{
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-	
+				
 				System.out.println("Left counterbarrier");
 			}			
 				b.leave();

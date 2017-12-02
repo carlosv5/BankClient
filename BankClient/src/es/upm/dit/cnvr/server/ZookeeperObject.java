@@ -109,7 +109,7 @@ public class ZookeeperObject implements Watcher{
 				//myId = myId.replace(rootMembers + "/", "");
 				// false. Debe esperar a arrancar el barrir
 				listMembers = getZk().getChildren(rootMembers,  memberWatcher, s);
-				printListMembers(listMembers);
+				//printListMembers(listMembers);
 				//System.out.println("Created znode nember id:"+ myId );
 
 

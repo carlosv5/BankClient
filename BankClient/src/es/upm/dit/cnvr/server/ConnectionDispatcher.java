@@ -132,7 +132,7 @@ public class ConnectionDispatcher extends Thread {
 
         try {
             //id ++;
-            System.out.println("Comnection " + id + ": connection closed");
+            System.out.println("Connection " + id + ": connection closed");
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();

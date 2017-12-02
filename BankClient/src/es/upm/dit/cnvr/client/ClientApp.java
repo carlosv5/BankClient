@@ -9,7 +9,7 @@ import es.upm.dit.cnvr.model.Transaction;
 
 public class ClientApp {
 	//Set true or false debug 
-	public static boolean debug = true;
+	public static boolean debug = false;
     
 	public ClientApp() {
 	}

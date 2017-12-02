@@ -97,7 +97,6 @@ public class Operate{
 		}
 	}
 	public void configure(){
-		System.out.println("-------------Entra en cuenta");
 		if (zk != null) {
 			// Create a folder for operations and include this process/server
 			try {

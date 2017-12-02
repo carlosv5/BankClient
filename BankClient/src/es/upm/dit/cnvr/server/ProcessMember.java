@@ -33,7 +33,7 @@ public class ProcessMember extends Thread{
 		System.out.print("The active members are: ");
 		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
-			System.out.print("(L) " + string + ", ");
+			System.out.print(string + ", ");
 
 		}
 		System.out.println();
