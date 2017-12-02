@@ -71,6 +71,13 @@ public class Receiver extends Thread{
 	   }
                 System.out.println("<< ID: " + transaction.getBankClient().getAccount());
                 System.out.println("<< Balance " + transaction.getBankClient().getBalance());
+		        if(status==ServiceStatus.OK){
+		        	System.out.println(">>Successful operation");
+		        } else{
+		        	System.out.println(">>Unsuccessful operation. Contact with the administrator");
+		        }
+				System.out.println("|----------------------------------------------------|");
+				System.out.println("|Enter an operation                                  |");
                 nReceiver ++;
             } catch (Exception e) {
                 break;

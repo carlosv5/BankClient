@@ -9,7 +9,7 @@ import es.upm.dit.cnvr.model.Transaction;
 
 public class ClientApp {
 	//Set true or false debug 
-	public static boolean debug = true;
+	public static boolean debug = false;
     
 	public ClientApp() {
 	}
@@ -40,9 +40,9 @@ public class ClientApp {
 		System.out.println("|   - Usage: DELETE [Account ID] [ClientName]        |");
 		System.out.println("|5. Show these options again                         |");
 		System.out.println("|   - Usage: OPTIONS                                 |");
+		System.out.println("|----------------------------------------------------|");
+		System.out.println("|Enter an operation                                  |");
 		while (true){
-			System.out.println("|----------------------------------------------------|");
-			System.out.println("|Enter an operation                                  |");
 			Scanner keyboard = new Scanner(System.in);
 		    String input = keyboard.nextLine();
 		    String[] input_parts = input.split(" ");
@@ -116,11 +116,7 @@ public class ClientApp {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-		        if(result){
-		        	System.out.println(">>Successful operation");
-		        } else{
-		        	System.out.println(">>Unsuccessful operation");
-		        }
+
 		}
 	}
 	
