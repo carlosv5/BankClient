@@ -128,11 +128,6 @@ public class ZookeeperObject implements Watcher{
 						getZk().create(rootBarrier, new byte[0], Ids.OPEN_ACL_UNSAFE,
 								CreateMode.PERSISTENT);
 					}
-					Stat sp = getZk().exists("/boperationleave", false);
-					if (sp == null) {
-						getZk().create("/boperationleave", new byte[0], Ids.OPEN_ACL_UNSAFE,
-								CreateMode.PERSISTENT);
-					}
 
 //					getZk().create(rootBarrier, new byte[0],
 //							Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);
@@ -310,6 +305,7 @@ public class ZookeeperObject implements Watcher{
 					synchronized (mutexBarrier) {
 						nBarriers ++;
 						System.out.println("BW: NBarriers: " + nBarriers);
+						Thread.sleep(6000);
 						mutexBarrier.notifyAll();
 						System.out.println("He hecho notify con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
 					}

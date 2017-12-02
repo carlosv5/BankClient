@@ -13,7 +13,7 @@ public class ProcessBarrier  extends Thread {
 
 	private List<String> listBarriersP = null;
 	private int npBarriers = 0;
-	private String rootBarrier = "/b1";
+	private String rootBarrier = "/boperation";
 	private ZooKeeper zk; 
 	private Watcher barrierWatcherP;
 	private Integer mutex;
@@ -35,9 +35,8 @@ public class ProcessBarrier  extends Thread {
 				synchronized (mutex) {
 					mutex.wait();
 				}
+				System.out.println("Recargando el watcher del barrier cuando ha saltado");
 				listBarriersP = zk.getChildren(rootBarrier, barrierWatcherP, s); 
-				npBarriers ++;
-				//System.out.println("Process Barrier. NBarriers: " + npBarriers);
 			} catch (Exception e) {
 				System.out.println("Unexpected Exception process barrier");
 				break;

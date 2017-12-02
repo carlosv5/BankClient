@@ -100,23 +100,16 @@ public class Barrier implements Watcher {
 			List<String> list = zk.getChildren(root, true);
 			System.out.println(size);
 			System.out.println(list.size());
-			List<String> boperationList = null;
-			boperationList = zk.getChildren(root+"leave", true);
-			if (list.size() < size && boperationList.size()==0) {
+			System.out.println("Cuantos somos en la barrera enter: " + list.size());
+			if (list.size() < size ) {
 				synchronized (mutexBarrier) {
 					System.out.println("While antes del wait barrier.java");
 					System.out.println("He hecho wait con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
-					mutexBarrier.wait();
+					mutexBarrier.wait(1000);
 					System.out.println("While tras el wait barrier.java");
 				}
 			} else {
-				System.out.println("ESTADO T: " + boperationList.size());
-				boperationList = zk.getChildren(root+"leave", true);
-				if (boperationList.size()==0) {
-					System.out.println("*********************** SE ESTA CREANDO EL NODO LEAVE **************");
-					zk.create(root+"leave/nodo", new byte[0], Ids.OPEN_ACL_UNSAFE,
-							CreateMode.EPHEMERAL);
-				}
+				System.out.println("Enter");
 				return true;
 			}
 		}
@@ -134,22 +127,16 @@ public class Barrier implements Watcher {
 		System.out.println("Start leave barrier");
 		zk.delete(nodoB, 0);
 		System.out.println("He borrado el nodoB: " + nodoB);
-		List<String> boperationList = zk.getChildren(root+"leave", true);
-		System.out.println("Leave");
-		System.out.println("La lista de "+ root+"leave"+" es: " + boperationList);
-		System.out.println("El size de boperationleave es: " + boperationList.size());
 		while (true) {
 			List<String> list = zk.getChildren(root, true);
+			System.out.println("Cuantos somos en la barrera leave: " + list.size());
 			
 			if (list.size() > 0) {
 				synchronized (mutexBarrier) {
-					mutexBarrier.wait();
+					mutexBarrier.wait(1000);
 				}
 			} else {
-				if (boperationList.size()>0) {
-					System.out.println("DELETING AUXILIAR NODE");
-					zk.delete(root+"leave/nodo", 0);
-				}
+				System.out.println("Leave");
 				return true;
 			}
 		}
