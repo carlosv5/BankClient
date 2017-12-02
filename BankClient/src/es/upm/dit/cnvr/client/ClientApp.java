@@ -30,7 +30,7 @@ public class ClientApp {
 	public static void showOptions(){
 		System.out.println("|       These are the operations you can do:         |");
 		System.out.println("|1. Create a client                                  |");
-		System.out.println("|   - Usage: CREATE [ClientName] [Balance]           |");
+		System.out.println("|   - Usage: CREATE [Name and lastnames] [Balance]   |");
 		System.out.println("|2. Read a client account                            |");
 		System.out.println("|   - Usage: READ [Account ID]                       |");
 		System.out.println("|3. Update balance of a client account               |");
@@ -55,14 +55,14 @@ public class ClientApp {
 		        switch (input_parts[0].toUpperCase()) {
 		            case "CREATE":
 		            	//Check options
-		            	if(input_parts[1] == null || input_parts[2] == null || input_parts.length > 3){
+		            	if(input_parts[1] == null || input_parts[2] == null || input_parts[3] == null || input_parts[4] == null || input_parts.length > 5){
 		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
 		            		break;
 		            	}
 		            	//Variables for method
 		            	op = OperationEnum.CREATE_CLIENT;
-		            	clientName = input_parts[1];
-		            	balance = Double.parseDouble(input_parts[2]);
+		            	clientName = input_parts[1]+" "+input_parts[2]+" "+input_parts[3];
+		            	balance = Double.parseDouble(input_parts[4]);
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		                break;
