@@ -305,7 +305,6 @@ public class ZookeeperObject implements Watcher{
 					synchronized (mutexBarrier) {
 						nBarriers ++;
 						System.out.println("BW: NBarriers: " + nBarriers);
-						Thread.sleep(6000);
 						mutexBarrier.notifyAll();
 						System.out.println("He hecho notify con el mutexBarrier: " + System.identityHashCode(mutexBarrier));
 					}
