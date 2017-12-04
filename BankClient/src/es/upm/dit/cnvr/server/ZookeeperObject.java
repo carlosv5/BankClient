@@ -1,7 +1,11 @@
 package es.upm.dit.cnvr.server;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -60,7 +64,8 @@ public class ZookeeperObject implements Watcher{
 	public void configure() {	
 		System.out.println("START CONFIGURE");
 		// This is static. A list of zookeeper can be provided for decide where to connect
-		String[] hosts = {"138.4.31.99:2181", "138.4.31.117:2182"};
+		String[] hosts = getIps().toArray(new String[0]);
+		//String[] hosts = {"138.4.31.99:2181", "138.4.31.117:2182"};
 
 		// Select a random zookeeper server
 		Random rand = new Random();
@@ -360,6 +365,18 @@ public class ZookeeperObject implements Watcher{
 			}
 		}
 	};
+	
+	private static ArrayList<String> getIps(){
+    	ArrayList<String> ips = new ArrayList<String>();
+    	try {
+			Files.lines(Paths.get("zookeeperips.txt")).forEach(ips::add);
+		} catch (IOException e) {
+			ips.add("127.0.0.1");
+			System.out.println("Ips not found. Default: 127.0.0.1");
+			e.printStackTrace();
+		}
+    	return ips;
+    }
 }
 
 
