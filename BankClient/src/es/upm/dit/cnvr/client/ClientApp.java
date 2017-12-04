@@ -47,8 +47,8 @@ public class ClientApp {
 		System.out.println("|4. Delete a client account                          |");
 		//ClientName for security purposes
 		System.out.println("|   - Usage: DELETE [Account ID] [Name and lastnames]|");
-		System.out.println("|5. Show all accounts								 |");
-		System.out.println("|   - Usage: SHOW			                         |");
+		System.out.println("|5. Show all accounts                                |");
+		System.out.println("|   - Usage: SHOW                                    |");
 		System.out.println("|6. Show these options again                         |");
 		System.out.println("|   - Usage: OPTIONS                                 |");
 		System.out.println("|----------------------------------------------------|");
