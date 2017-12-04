@@ -63,12 +63,18 @@ public class ClientApp {
         	Double balance = 0.0;
 		        switch (input_parts[0].toUpperCase()) {
 		            case "CREATE":
-		            	//Check options
-		            	if(input_parts[1] == null || input_parts[2] == null || input_parts[3] == null || input_parts[4] == null || input_parts.length > 5){
-		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
-		            		break;
-		            	}
-		            	//Variables for method
+					try {
+						//Check options
+						if (input_parts[1] == null || input_parts[2] == null || input_parts[3] == null
+								|| input_parts[4] == null || input_parts.length > 5) {
+							System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+							break;
+						} 
+					} catch (Exception e) {
+						System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+						break;
+					}
+					//Variables for method
 		            	op = OperationEnum.CREATE_CLIENT;
 		            	clientName = input_parts[1]+" "+input_parts[2]+" "+input_parts[3];
 		            	balance = Double.parseDouble(input_parts[4]);
@@ -76,24 +82,34 @@ public class ClientApp {
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		                break;
 		            case "READ":	
-		            	//Check options
-		            	if(input_parts[1] == null || input_parts.length > 2){
-		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
-		            		break;
-		            	}
-		            	//Variables for method
+					try {
+						//Check options
+						if (input_parts[1] == null || input_parts.length > 2) {
+							System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+							break;
+						} 
+					} catch (Exception e) {
+						System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+						break;
+					}
+					//Variables for method
 		            	op = OperationEnum.READ_CLIENT;
 		            	accountId = input_parts[1];
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		            	break;
 		            case "UPDATE":
-		            	//Check options
-		            	if(input_parts[1] == null || input_parts[2] == null || input_parts.length > 3){
-		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
-		            		break;
-		            	}
-		            	//Variables for method
+					try {
+						//Check options
+						if (input_parts[1] == null || input_parts[2] == null || input_parts.length > 3) {
+							System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+							break;
+						} 
+					} catch (Exception e) {
+						System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+						break;
+					}
+					//Variables for method
 		            	op = OperationEnum.UPDATE_CLIENT;
 		            	accountId = input_parts[1];
 		            	balance = Double.parseDouble(input_parts[2]);
@@ -101,12 +117,18 @@ public class ClientApp {
 		            	result = operateAndSend(op,accountId,clientName,balance);		       
 		            	break;
 		            case "DELETE":
-		            	//Check options
-		            	if(input_parts[1] == null || input_parts[2] == null || input_parts[3] == null|| input_parts[4] == null|| input_parts.length > 5){
-		            		System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
-		            		break;
-		            	}
-		            	//Variables for method
+					try {
+						//Check options
+						if (input_parts[1] == null || input_parts[2] == null || input_parts[3] == null
+								|| input_parts[4] == null || input_parts.length > 5) {
+							System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+							break;
+						} 
+					} catch (Exception e) {
+						System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+						break;
+					}
+					//Variables for method
 		            	op = OperationEnum.DELETE_CLIENT;
 		            	accountId = input_parts[1];
 		                clientName = input_parts[2]+" "+input_parts[3]+" "+input_parts[4];
