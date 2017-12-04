@@ -6,6 +6,15 @@ public class Transaction implements Serializable {
 	private OperationEnum operation;
 	private BankClient bankClient;
 	private ServiceStatus status;
+	private ClientDB clientdb;
+
+	public ClientDB getClientdb() {
+		return clientdb;
+	}
+
+	public void setClientdb(ClientDB clientdb) {
+		this.clientdb = clientdb;
+	}
 
 	public Transaction(OperationEnum op, BankClient bc) {
 		this.operation = op;

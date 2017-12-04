@@ -64,6 +64,19 @@ public class Receiver extends Thread{
 	            	if(status == ServiceStatus.OK)
 	                    System.out.println("<< Deleted client: " + transaction.getBankClient().getClientName());
 	                break;
+	            
+	            case "SHOW_ALL":	
+	            	if(status == ServiceStatus.OK){
+	            		java.util.HashMap <String, BankClient> db = transaction.getClientdb().getClientDB();
+	            		System.out.println("******************************************");
+	            		for (java.util.HashMap.Entry <String, BankClient>  entry : db.entrySet()) {
+	            			System.out.print("Account ID: " + entry.getValue().getAccount());
+		                	System.out.print(" | Client Name: " + entry.getValue().getClientName());
+		                	System.out.println(" | Balance: " + entry.getValue().getBalance());
+	            		}
+	            		System.out.println("******************************************");
+	            	}
+	                break;
 
 	            default:
                     System.out.println("<< There is an error state, consult with the admin");

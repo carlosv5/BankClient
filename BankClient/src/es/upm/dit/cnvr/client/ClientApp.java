@@ -47,7 +47,9 @@ public class ClientApp {
 		System.out.println("|4. Delete a client account                          |");
 		//ClientName for security purposes
 		System.out.println("|   - Usage: DELETE [Account ID] [Name and lastnames]|");
-		System.out.println("|5. Show these options again                         |");
+		System.out.println("|5. Show all accounts								 |");
+		System.out.println("|   - Usage: SHOW			                         |");
+		System.out.println("|6. Show these options again                         |");
 		System.out.println("|   - Usage: OPTIONS                                 |");
 		System.out.println("|----------------------------------------------------|");
 		System.out.println("|Enter an operation                                  |");
@@ -135,6 +137,22 @@ public class ClientApp {
 		            	//Send
 		            	result = operateAndSend(op,accountId,clientName,balance);
 		                break;
+		            case "SHOW":	
+						try {
+							//Check options
+							if (input_parts.length > 1) {
+								System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+								break;
+							} 
+						} catch (Exception e) {
+							System.out.println("¡¡¡¡You are not using this operation properly!!!!\n\n");
+							break;
+						}
+						//Variables for method
+			            	op = OperationEnum.SHOW_ALL;
+			            	//Send
+			            	result = operateAndSend(op,accountId,clientName,balance);		       
+			            	break;
 		            case "OPTIONS":
 		                showOptions();
 		                break;

@@ -108,6 +108,13 @@ public class ConnectionDispatcher extends Thread {
                 	}
                 }
                 
+                if (transaction.getOperation().equals(OperationEnum.SHOW_ALL)){
+                	
+            		transaction.setClientdb(db);;
+            		transaction.setStatus(ServiceStatus.OK);
+
+                }
+                
                 if(es.upm.dit.cnvr.client.ClientApp.debug){
                     	System.out.println("Debug operation");
                     	System.out.println("Connection Dispatcher");

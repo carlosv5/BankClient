@@ -42,7 +42,8 @@ public class ClientDB implements Serializable {
 			clientDB.put(client.getAccount(), client);
 			stat = ServiceStatus.OK;
 		}
-		System.out.println("DB: " + clientDB.toString());
+		//System.out.println("DB: " + clientDB.toString());
+		printDb();
 		return stat;
 	}
 
@@ -51,7 +52,8 @@ public class ClientDB implements Serializable {
 		BankClient client = null;
 		if (clientDB.containsKey(clientAccount)) 
 			client = clientDB.get(clientAccount);
-		System.out.println("DB: " + clientDB.toString());
+		//System.out.println("DB: " + clientDB.toString());
+		printDb();
 		return client;
 	}
 	
@@ -65,7 +67,8 @@ public class ClientDB implements Serializable {
 			} else {
 				stat = ServiceStatus.INFORMATION_INVALID;
 			} 
-		System.out.println("DB: " + clientDB.toString());
+		//System.out.println("DB: " + clientDB.toString());
+		printDb();
 		return stat;
 	}
 	
@@ -77,11 +80,11 @@ public class ClientDB implements Serializable {
 		} else {
 			stat = ServiceStatus.INFORMATION_INVALID;
 		}
-		System.out.println("DB: " + clientDB.toString());
+		//System.out.println("DB: " + clientDB.toString());
+		printDb();
 		return stat;
 	}
 
-	// XXX: Diria de cambiar esto por un getBank, porque es lo que realmente hace. No se si seria de utilidad aun asi
 	public boolean createBank(ClientDB clientDB) {
 		this.clientDB = clientDB.getClientDB();
 		return true;
@@ -93,6 +96,17 @@ public class ClientDB implements Serializable {
 			aux = aux + entry.getValue().toString() + "\n";
 		}
 		return aux;
+	}
+	
+	public void printDb(){
+		java.util.HashMap <String, BankClient> db = clientDB;
+		System.out.println("******************************************");
+		for (java.util.HashMap.Entry <String, BankClient>  entry : db.entrySet()) {
+			System.out.print("Account ID: " + entry.getValue().getAccount());
+        	System.out.print(" | Client Name: " + entry.getValue().getClientName());
+        	System.out.println(" | Balance: " + entry.getValue().getBalance());
+		}
+		System.out.println("******************************************");
 	}
 }
 
