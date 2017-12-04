@@ -34,7 +34,7 @@ public class ClientDB implements Serializable {
 	
 	public ServiceStatus createClient(BankClient client) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		if (clientDB.containsKey(client.getAccount())) {
+		if (clientDB.containsKey(client.getAccount()) && client.getBalance() >= 0) {
 			// It already exists: We inform about it
 			stat = ServiceStatus.EXISTING_CLIENT; 
 		}else {
@@ -46,7 +46,7 @@ public class ClientDB implements Serializable {
 		return stat;
 	}
 
-
+	//XXX: No se utiliza
 	public BankClient readAccount(String clientAccount) {
 		BankClient client = null;
 		if (clientDB.containsKey(clientAccount)) 
@@ -57,7 +57,7 @@ public class ClientDB implements Serializable {
 	
 	public ServiceStatus update (String accountId, double balance) {
 		ServiceStatus stat = ServiceStatus.INFORMATION_MISSED;
-		if (balance > 0 &&  clientDB.containsKey(accountId)){
+		if (balance >= 0 &&  clientDB.containsKey(accountId)){
 				BankClient client = clientDB.get(accountId);
 				client.setBalance(balance);
 				clientDB.put(client.getAccount(), client);
@@ -77,6 +77,7 @@ public class ClientDB implements Serializable {
 		} else {
 			stat = ServiceStatus.INFORMATION_INVALID;
 		}
+		System.out.println("DB: " + clientDB.toString());
 		return stat;
 	}
 

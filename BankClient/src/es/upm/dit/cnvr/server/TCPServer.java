@@ -18,7 +18,7 @@ public class TCPServer {
         zkobject.configure();
         Operate operate = zkobject.getOperate();
 
-        ServerSocket welcomeSocket = new ServerSocket(6789);
+        ServerSocket welcomeSocket = new ServerSocket(6786);
         
 
         while (true) {

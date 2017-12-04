@@ -125,19 +125,27 @@ public class Barrier implements Watcher {
 			Stat stat = zk.exists("/boperationleave", false);
 			if (list.size() > 0) {
 				synchronized (mutexBarrier) {
-					mutexBarrier.wait(1000);
 					if(stat == null){
 						try{
 						zk.create("/boperationleave", new byte[0],
 								Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 						} catch (Exception e1){
-							System.out.println("Node boperationleave created yet");
+							System.out.println("Node boperationleave already created");
 
 						}
-						}
+					}
+					mutexBarrier.wait(1000);
 				}
 			} else {
 				System.out.println("Leave");
+				if(stat != null){
+					try{
+					zk.delete("/boperationleave",0);
+					} catch (Exception e1){
+						System.out.println("Node boperationleave already created");
+
+					}
+				}
 				return true;
 			}
 		}

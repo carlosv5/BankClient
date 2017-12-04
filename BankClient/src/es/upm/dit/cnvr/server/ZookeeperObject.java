@@ -60,7 +60,7 @@ public class ZookeeperObject implements Watcher{
 	public void configure() {	
 		System.out.println("START CONFIGURE");
 		// This is static. A list of zookeeper can be provided for decide where to connect
-		String[] hosts = {"localhost:2181", "localhost:2182"};
+		String[] hosts = {"138.4.31.99:2181", "138.4.31.117:2182"};
 
 		// Select a random zookeeper server
 		Random rand = new Random();
