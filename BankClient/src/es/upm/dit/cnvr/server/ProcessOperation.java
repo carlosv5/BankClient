@@ -48,7 +48,6 @@ public class ProcessOperation extends Thread{
 //		String string = new String(data, StandardCharsets.UTF_8);
 //		return string;
 	}
-	//TODO: Esto todavia no se ha mirado.
 	@Override
 	public void run() {
 		Stat s = null;
@@ -65,10 +64,8 @@ public class ProcessOperation extends Thread{
 						zk.delete("/boperationleave", 0);
 					}
 				} catch (KeeperException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			    List<String> listOperation = zk.getChildren(rootOperation,  false, null);
@@ -80,7 +77,6 @@ public class ProcessOperation extends Thread{
 				b.enter();
 				if (operate.getPersonalCounter() < size){
 					System.out.println("DESACTUALIZADO");
-					///XXX: Voy a cambiar de posicion b.enter y b.leave de dentro del if afuera porque va a ser necesario que la operacion primera la haga en otro lado, y entonces estara al dia y no entrara a la barrera bloqueando a los demas
 					int numOp = size-operate.getPersonalCounter();
 					try {
 						listOperation = zk.getChildren(rootOperation, false);
@@ -92,7 +88,6 @@ public class ProcessOperation extends Thread{
 						byte[] op = new byte[0];
 						try {
 							op = zk.getData(rootOperation+"/" +listOperation.get(i),false, null);
-							//TODO: Cambiar esto por las  verdaderas (Operaciones verdaderas)
 							transaction = readData(op);
 							bc = transaction.getBankClient();
 							

@@ -47,7 +47,6 @@ public class ClientDB implements Serializable {
 		return stat;
 	}
 
-	//XXX: No se utiliza
 	public BankClient readAccount(String clientAccount) {
 		BankClient client = null;
 		if (clientDB.containsKey(clientAccount)) 

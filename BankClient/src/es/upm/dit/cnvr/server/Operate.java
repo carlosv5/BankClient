@@ -25,7 +25,6 @@ import es.upm.dit.cnvr.model.Transaction;
 
 // This class only create the znodes, it doesn't do any operation actually.
 
-//TODO: Plantear con bloqueo para que no se cree una operacion si ya se esta haciendo una
 
 public class Operate{
 
@@ -77,9 +76,8 @@ public class Operate{
 		byte[] data = createByte(transaction);
 		String node = "";
 		try {
-			//XXX: CAMBIAR EPHEMERAL POR PERSISTENT
 			node = zk.create(rootOperate + "/" + name, data, Ids.OPEN_ACL_UNSAFE,
-					CreateMode.EPHEMERAL_SEQUENTIAL);
+					CreateMode.PERSISTENT_SEQUENTIAL);
 		} catch (KeeperException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {

@@ -69,7 +69,6 @@ public class ConnectionDispatcherTest extends Thread {
 
                 transaction = transactiontest;
                 BankClient bc = transaction.getBankClient();                
-                //TODO: Deberiamos meter comprobaciones para que si la operacion no la realiza bien que no cree los nodos de operaciones
                 if (transaction.getOperation().equals(OperationEnum.CREATE_CLIENT)){
                 	bc.setAccount(generateId(5));
                 	status = db.createClient(bc);
@@ -90,7 +89,6 @@ public class ConnectionDispatcherTest extends Thread {
                 	}  	
                 }
                 
-                //TODO: Quitar en ProcessOperation, no es necesario
                 if (transaction.getOperation().equals(OperationEnum.READ_CLIENT)){
                 	if (bc.getAccount() != "0") {
                 		bc = db.readAccount(bc.getAccount());
@@ -144,7 +142,6 @@ public class ConnectionDispatcherTest extends Thread {
         }
         System.out.println("FIN CONNECTION DISPATCHER");
     }
-    //TODO Change in the method put of HashMap -> <String, BankClient>
     private static String generateId(int bloqDigits){
     	Random random = new Random();
     	StringBuilder accountId = new StringBuilder();
