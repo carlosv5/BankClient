@@ -2,12 +2,16 @@ package es.upm.dit.cnvr.server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
+import es.upm.dit.cnvr.model.BankClient;
 import es.upm.dit.cnvr.model.ClientDB;
+import es.upm.dit.cnvr.model.OperationEnum;
+import es.upm.dit.cnvr.model.Transaction;
 import es.upm.dit.cnvr.server.ZookeeperObject;
 
 
-public class TCPServer {
+public class TCPServerTest {
 
     public static void main(String[] args) throws Exception {
 
@@ -17,14 +21,14 @@ public class TCPServer {
         ZookeeperObject zkobject = new ZookeeperObject();
         zkobject.configure();
         Operate operate = zkobject.getOperate();
-
-        ServerSocket welcomeSocket = new ServerSocket(6788);
+        int loop = 100;
+        Transaction transaction;
         
-        
-        while (true) {
+        for (int i=0; i<=loop; i++) {
             try {
-                connectionSocket = welcomeSocket.accept();
-                ConnectionDispatcher conHandler = new ConnectionDispatcher(connectionSocket, id, db, zkobject, operate);
+            	Thread.sleep(750);
+            	transaction = new Transaction(OperationEnum.CREATE_CLIENT, new BankClient("0", "User de prueba", i));
+                ConnectionDispatcherTest conHandler = new ConnectionDispatcherTest(id, db, zkobject, operate, transaction);
                 System.out.println("Get a socket connection");
                 conHandler.start();
                 System.out.println("Reach after start");
