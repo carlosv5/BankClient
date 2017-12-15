@@ -76,7 +76,7 @@ public class Operate{
 		byte[] data = createByte(transaction);
 		String node = "";
 		try {
-			node = zk.create(rootOperate + "/" + name, data, Ids.OPEN_ACL_UNSAFE,
+			node = zk.create(rootOperate + "/", data, Ids.OPEN_ACL_UNSAFE,
 					CreateMode.PERSISTENT_SEQUENTIAL);
 		} catch (KeeperException e) {
 			e.printStackTrace();
