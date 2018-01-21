@@ -369,7 +369,7 @@ public class ZookeeperObject implements Watcher{
 	private static ArrayList<String> getIps(){
     	ArrayList<String> ips = new ArrayList<String>();
     	try {
-			Files.lines(Paths.get("zookeeperips.txt")).forEach(ips::add);
+			Files.lines(Paths.get("/root/zookeeperips.txt")).forEach(ips::add);
 		} catch (IOException e) {
 			ips.add("127.0.0.1");
 			System.out.println("Ips not found. Default: 127.0.0.1");
