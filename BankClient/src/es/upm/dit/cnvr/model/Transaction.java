@@ -1,12 +1,14 @@
 package es.upm.dit.cnvr.model;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 
 public class Transaction implements Serializable {
 	private OperationEnum operation;
 	private BankClient bankClient;
 	private ServiceStatus status;
 	private ClientDB clientdb;
+	private String hostname;
 
 	public ClientDB getClientdb() {
 		return clientdb;
@@ -35,6 +37,14 @@ public class Transaction implements Serializable {
 
 	public void setBankClient(BankClient bankClient) {
 		this.bankClient = bankClient;
+	}
+	
+	public String getHostname() {
+		return hostname;
+	}
+
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
 	}
 
 	@Override

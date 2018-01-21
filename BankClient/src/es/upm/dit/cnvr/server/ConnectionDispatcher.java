@@ -5,7 +5,9 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Random;
 
 import org.apache.zookeeper.ZooKeeper;
@@ -67,6 +69,13 @@ public class ConnectionDispatcher extends Thread {
             	}
 
                 transaction = (Transaction) inFromClient.readObject();
+        		try {
+        			String hostname = InetAddress.getLocalHost().getHostName();
+                    transaction.setHostname(hostname);
+        		} catch (UnknownHostException e1) {
+        			// TODO Auto-generated catch block
+        			e1.printStackTrace();
+        		}
                 BankClient bc = transaction.getBankClient();                
                 if (transaction.getOperation().equals(OperationEnum.CREATE_CLIENT)){
                 	bc.setAccount(generateId(5));

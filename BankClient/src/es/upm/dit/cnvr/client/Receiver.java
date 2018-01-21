@@ -81,7 +81,8 @@ public class Receiver extends Thread{
 	            default:
                     System.out.println("<< There is an error state, consult with the admin");
 	   }
-                System.out.println("<< ID: " + transaction.getBankClient().getAccount());
+                System.out.println("Operation done in server: " + transaction.getHostname());
+		        System.out.println("<< ID: " + transaction.getBankClient().getAccount());
                 System.out.println("<< Balance " + transaction.getBankClient().getBalance());
 		        if(status==ServiceStatus.OK){
 		        	System.out.println(">>Successful operation");
